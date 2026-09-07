@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Best Home Automation Company in Kerala",
   description: "Professional smart home automation, security systems, and IT networking solutions in Kerala.",
   verification: {
-    google: "9oGfH-r_Ri7t5QI14TDGLP6kz90jraovubbcxFiYv98",
+    google: "23yOEZTq-I6X7CvPC3bJ7JiO3Xj0xx4LRCeOiwcoOzg",
   },
 };
 
