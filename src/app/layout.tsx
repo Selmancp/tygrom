@@ -15,15 +15,21 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Best Home Automation Company in Kerala",
   description: "Professional smart home automation, security systems, and IT networking solutions in Kerala.",
+  verification: {
+    google: "9oGfH-r_Ri7t5QI14TDGLP6kz90jraovubbcxFiYv98",
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }
