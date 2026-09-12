@@ -40,12 +40,11 @@ export async function POST(request: Request) {
       }
     `;
 
-    // Fallback support for any variable naming variation in Vercel
     const smtpUser = process.env.ZOHO_USER || process.env.SMTP_USER || process.env.ZOHO_EMAIL || 'career@tygrom.in';
     const smtpPass = process.env.ZOHO_APP_PASSWORD || process.env.SMTP_PASS || process.env.ZOHO_PASSWORD || 'qDtC3PH7fk7N';
 
     const transporter = nodemailer.createTransport({
-      host: 'smtppro.zoho.in',
+      host: 'smtp.zoho.in',
       port: 465,
       secure: true,
       auth: {
