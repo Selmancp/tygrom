@@ -12,15 +12,11 @@ import {
   Menu,
   X,
   Briefcase,
-  Upload,
-  Send,
   GraduationCap,
   ArrowLeft,
   Home as HomeIcon,
   Info,
-  Wrench,
-  Calendar,
-  User
+  Wrench
 } from 'lucide-react';
 
 export default function Home() {
@@ -65,6 +61,8 @@ export default function Home() {
   });
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleFresherFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -78,39 +76,81 @@ export default function Home() {
     }
   };
 
-  const handleFresherSubmit = (e: React.FormEvent) => {
+  // UPDATED: Sends Fresher data & CV file directly to /api/career
+  const handleFresherSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cvName = fresherForm.cv ? fresherForm.cv.name : 'No CV Uploaded';
-    const subject = encodeURIComponent(`New Fresher Application - ${fresherForm.fullName}`);
-    const body = encodeURIComponent(
-      `New Fresher Career Application:\n\n` +
-      `Full Name: ${fresherForm.fullName}\n` +
-      `Email: ${fresherForm.email}\n` +
-      `Phone: ${fresherForm.phone}\n` +
-      `Education: ${fresherForm.education}\n` +
-      `Personality & Goal: ${fresherForm.personalityGoal}\n` +
-      `Attached CV File: ${cvName}`
-    );
-    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    const formData = new FormData();
+    formData.append('applicantType', 'fresher');
+    formData.append('name', fresherForm.fullName);
+    formData.append('email', fresherForm.email);
+    formData.append('phone', fresherForm.phone);
+    formData.append('education', fresherForm.education);
+    formData.append('personalityGoal', fresherForm.personalityGoal);
+    if (fresherForm.cv) {
+      formData.append('resume', fresherForm.cv);
+    }
+
+    try {
+      const response = await fetch('/api/career', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormSubmitted(true);
+      } else {
+        setErrorMessage(data.error || 'Failed to submit application.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleExpSubmit = (e: React.FormEvent) => {
+  // UPDATED: Sends Experienced data & CV file directly to /api/career
+  const handleExpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cvName = expForm.cv ? expForm.cv.name : 'No CV Uploaded';
-    const subject = encodeURIComponent(`New Experienced Application (${expForm.position}) - ${expForm.fullName}`);
-    const body = encodeURIComponent(
-      `New Experienced Career Application:\n\n` +
-      `Full Name: ${expForm.fullName}\n` +
-      `Email: ${expForm.email}\n` +
-      `Phone: ${expForm.phone}\n` +
-      `Position Applying For: ${expForm.position}\n` +
-      `Years of Experience: ${expForm.yearsOfExp}\n` +
-      `Technical Strengths: ${expForm.technicalStrengths}\n` +
-      `Attached CV File: ${cvName}`
-    );
-    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    const formData = new FormData();
+    formData.append('applicantType', 'experienced');
+    formData.append('name', expForm.fullName);
+    formData.append('email', expForm.email);
+    formData.append('phone', expForm.phone);
+    formData.append('position', expForm.position);
+    formData.append('yearsOfExp', expForm.yearsOfExp);
+    formData.append('technicalStrengths', expForm.technicalStrengths);
+    if (expForm.cv) {
+      formData.append('resume', expForm.cv);
+    }
+
+    try {
+      const response = await fetch('/api/career', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormSubmitted(true);
+      } else {
+        setErrorMessage(data.error || 'Failed to submit application.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSiteVisitSubmit = (e: React.FormEvent) => {
@@ -310,7 +350,6 @@ export default function Home() {
                   Smart Automation & ELV Technology Partner
                 </div>
                 
-                {/* STRICT 2-LINE FORMAT: FIRST LINE "Intelligence,", SECOND LINE "Integrated Your Space." */}
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-3 sm:mb-4 drop-shadow-md">
                   Intelligence,<br />
                   Integrated Your Space.
@@ -402,7 +441,6 @@ export default function Home() {
                 <h3 className="text-3xl sm:text-4xl font-bold text-[#0A192F]">Our Integrated Solutions</h3>
               </div>
 
-              {/* 2 columns on mobile (grid-cols-2), 2 on md, 3 on lg */}
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
                 {services.map((srv, idx) => {
                   return (
@@ -431,7 +469,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* INQUIRE BUTTON: Reduced size across all views, left-aligned, no extra spacing inside */}
                       <div className="px-3 sm:px-8 pb-3 sm:pb-8 flex items-center justify-start">
                         <a 
                           href="https://wa.me/916235625272" 
@@ -462,7 +499,7 @@ export default function Home() {
                 Build Your Career With Tygrom
               </h1>
               <p className="text-slate-600 max-w-xl mx-auto text-sm sm:text-base italic">
-                "Your future is created by what you do today, not tomorrow. Take the first step toward a brilliant career in smart technology and innovation with us."
+                &quot;Your future is created by what you do today, not tomorrow. Take the first step toward a brilliant career in smart technology and innovation with us.&quot;
               </p>
             </div>
 
@@ -473,7 +510,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#0A192F]">Application Submitted Successfully!</h3>
                 <p className="text-slate-600 max-w-md mx-auto text-sm">
-                  Your email client has opened to send your application securely. Our hiring team will review it shortly.
+                  Your details and resume have been sent to our hiring team. We will review your application and reach out shortly.
                 </p>
                 <div className="pt-4 flex justify-center gap-4">
                   <button 
@@ -545,6 +582,12 @@ export default function Home() {
                   </span>
                 </div>
 
+                {errorMessage && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
+                    {errorMessage}
+                  </div>
+                )}
+
                 <form onSubmit={handleFresherSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
@@ -584,53 +627,45 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Education Qualification & Degree *</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Education Background *</label>
                       <input 
                         type="text" 
                         required
                         value={fresherForm.education}
                         onChange={(e) => setFresherForm({...fresherForm, education: e.target.value})}
-                        placeholder="e.g. Diploma in Electronics / B.Tech"
+                        placeholder="Degree / Diploma / Specialization"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                       />
                     </div>
                   </div>
 
-                  <div className="bg-sky-50/60 border border-sky-100 p-5 rounded-xl">
-                    <label className="block text-xs font-extrabold uppercase tracking-wider text-[#0A192F] mb-1">
-                      ⭐ Personality & Life Goal: What drives you, and what are your main career targets? *
-                    </label>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Personality & Career Goal</label>
                     <textarea 
-                      required
-                      rows={3}
+                      rows={4}
                       value={fresherForm.personalityGoal}
                       onChange={(e) => setFresherForm({...fresherForm, personalityGoal: e.target.value})}
-                      placeholder="e.g. I am a quick learner, disciplined, and eager to master smart automation..."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-white"
-                    ></textarea>
+                      placeholder="Share your technical interests, problem-solving mindset, and future goals..."
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                    />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Your CV / Resume *</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                          <Upload className="w-8 h-8 mb-2 text-[#00B4D8]" />
-                          <p className="text-sm text-slate-600 font-medium">
-                            {fresherForm.cv ? <span className="text-[#00B4D8] font-bold">{fresherForm.cv.name}</span> : "Click to upload CV"}
-                          </p>
-                        </div>
-                        <input type="file" required accept=".pdf,.doc,.docx" onChange={handleFresherFileChange} className="hidden" />
-                      </label>
-                    </div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Attach Resume / CV (Optional)</label>
+                    <input 
+                      type="file" 
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFresherFileChange}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-[#00B4D8] hover:file:bg-sky-100 cursor-pointer"
+                    />
                   </div>
 
                   <button 
-                    type="submit" 
-                    className="w-full py-4 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition shadow-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#00B4D8] hover:bg-[#0799ba] text-white font-bold text-sm transition shadow-lg disabled:opacity-50"
                   >
-                    <span>Submit</span>
-                    <Send className="w-4 h-4 text-white" />
+                    {isSubmitting ? 'Submitting Application...' : 'Submit Application'}
                   </button>
                 </form>
               </div>
@@ -645,9 +680,15 @@ export default function Home() {
                     <span>Back to selection</span>
                   </button>
                   <span className="px-3 py-1 bg-sky-50 text-[#00B4D8] rounded-full text-xs font-bold uppercase tracking-wider">
-                    Experienced Professional Track
+                    Experienced Track
                   </span>
                 </div>
+
+                {errorMessage && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
+                    {errorMessage}
+                  </div>
+                )}
 
                 <form onSubmit={handleExpSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -658,7 +699,7 @@ export default function Home() {
                         required
                         value={expForm.fullName}
                         onChange={(e) => setExpForm({...expForm, fullName: e.target.value})}
-                        placeholder="e.g. Muhammed Ali"
+                        placeholder="e.g. Anjali Nair"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                       />
                     </div>
@@ -688,67 +729,57 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Position Applying For *</label>
-                      <select 
-                        value={expForm.position}
-                        onChange={(e) => setExpForm({...expForm, position: e.target.value})}
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Years of Experience *</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={expForm.yearsOfExp}
+                        onChange={(e) => setExpForm({...expForm, yearsOfExp: e.target.value})}
+                        placeholder="e.g. 3 Years"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      >
-                        <option value="Field Technician / Installer">Field Technician / Installer</option>
-                        <option value="Smart Home Programmer">Smart Home Programmer</option>
-                        <option value="CCTV & Networking Engineer">CCTV & Networking Engineer</option>
-                        <option value="Sales & Business Development">Sales & Business Development</option>
-                      </select>
+                      />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Years of Relevant Experience *</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Position Applying For *</label>
                     <input 
                       type="text" 
                       required
-                      value={expForm.yearsOfExp}
-                      onChange={(e) => setExpForm({...expForm, yearsOfExp: e.target.value})}
-                      placeholder="e.g. 4 Years"
+                      value={expForm.position}
+                      onChange={(e) => setExpForm({...expForm, position: e.target.value})}
+                      placeholder="e.g. Field Technician / Installer"
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                     />
                   </div>
 
-                  <div className="bg-sky-50/60 border border-sky-100 p-5 rounded-xl">
-                    <label className="block text-xs font-extrabold uppercase tracking-wider text-[#0A192F] mb-1">
-                      ⭐ Experience Highlights: Core technical strengths & major project achievements *
-                    </label>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Technical Strengths & Key Projects</label>
                     <textarea 
-                      required
-                      rows={3}
+                      rows={4}
                       value={expForm.technicalStrengths}
                       onChange={(e) => setExpForm({...expForm, technicalStrengths: e.target.value})}
-                      placeholder="e.g., Expert in configuring Hikvision NVR arrays and structured Cat6 fiber management..."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-white"
-                    ></textarea>
+                      placeholder="Mention your key expertise, technologies handled, and prior experience..."
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                    />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Your CV / Resume *</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                          <Upload className="w-8 h-8 mb-2 text-[#00B4D8]" />
-                          <p className="text-sm text-slate-600 font-medium">
-                            {expForm.cv ? <span className="text-[#00B4D8] font-bold">{expForm.cv.name}</span> : "Click to upload CV"}
-                          </p>
-                        </div>
-                        <input type="file" required accept=".pdf,.doc,.docx" onChange={handleExpFileChange} className="hidden" />
-                      </label>
-                    </div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Attach Resume / CV (Optional)</label>
+                    <input 
+                      type="file" 
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleExpFileChange}
+                      className="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-[#00B4D8] hover:file:bg-sky-100 cursor-pointer"
+                    />
                   </div>
 
                   <button 
-                    type="submit" 
-                    className="w-full py-4 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition shadow-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#00B4D8] hover:bg-[#0799ba] text-white font-bold text-sm transition shadow-lg disabled:opacity-50"
                   >
-                    <span>Submit</span>
-                    <Send className="w-4 h-4 text-white" />
+                    {isSubmitting ? 'Submitting Application...' : 'Submit Application'}
                   </button>
                 </form>
               </div>
@@ -757,131 +788,101 @@ export default function Home() {
         </section>
       )}
 
-      {/* SITE VISIT POPUP MODAL FORM */}
+      {/* SITE VISIT MODAL */}
       {isSiteVisitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden relative">
-            
-            {/* Modal Header */}
-            <div className="bg-[#0A192F] px-6 py-4 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#00B4D8]" />
-                <h3 className="font-bold text-base">Book Free Site Visit</h3>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 bg-[#0A192F] text-white flex justify-between items-center">
+              <h3 className="font-bold text-lg">Book Free Site Visit</h3>
               <button 
                 onClick={() => setIsSiteVisitModalOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-800 transition text-slate-400 hover:text-white"
+                className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Modal Form Body */}
-            <form onSubmit={handleSiteVisitSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSiteVisitSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Contact Person *</label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                  <input 
-                    type="text" 
-                    required
-                    value={siteVisitForm.contactPerson}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, contactPerson: e.target.value})}
-                    placeholder="Enter contact person name"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                  />
-                </div>
+                <input 
+                  type="text" 
+                  required
+                  value={siteVisitForm.contactPerson}
+                  onChange={(e) => setSiteVisitForm({...siteVisitForm, contactPerson: e.target.value})}
+                  placeholder="Your Name"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Phone / WhatsApp Number *</label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                  <input 
-                    type="tel" 
-                    required
-                    value={siteVisitForm.phone}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, phone: e.target.value})}
-                    placeholder="+91 XXXXXXXXXX"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                  />
-                </div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Phone Number *</label>
+                <input 
+                  type="tel" 
+                  required
+                  value={siteVisitForm.phone}
+                  onChange={(e) => setSiteVisitForm({...siteVisitForm, phone: e.target.value})}
+                  placeholder="+91 XXXXXXXXXX"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Site Location / Area in Kerala *</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                  <input 
-                    type="text" 
-                    required
-                    value={siteVisitForm.location}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, location: e.target.value})}
-                    placeholder="e.g. Randathani, Malappuram"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                  />
-                </div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Site Location *</label>
+                <input 
+                  type="text" 
+                  required
+                  value={siteVisitForm.location}
+                  onChange={(e) => setSiteVisitForm({...siteVisitForm, location: e.target.value})}
+                  placeholder="City / Area"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Purpose / System Required *</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Purpose / System Required</label>
                 <select 
                   value={siteVisitForm.purpose}
                   onChange={(e) => setSiteVisitForm({...siteVisitForm, purpose: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                 >
                   <option value="Smart Home Automation">Smart Home Automation</option>
                   <option value="Smart Office Automation">Smart Office Automation</option>
                   <option value="CCTV & Security Systems">CCTV & Security Systems</option>
                   <option value="Access Control & Gate Automation">Access Control & Gate Automation</option>
-                  <option value="Video Intercom & Video Door Phone Systems">Video Intercom & Video Door Phone Systems</option>
                   <option value="Networking & WiFi Solutions">Networking & WiFi Solutions</option>
                   <option value="Home Theater & Audio-Video">Home Theater & Audio-Video</option>
-                  <option value="Building Automation">Building Automation</option>
                   <option value="Smart Swimming Pool">Smart Swimming Pool</option>
-                  <option value="Electrical & IT Solutions">Electrical & IT Solutions</option>
-                  <option value="Digital Signage Solution">Digital Signage Solution</option>
-                  <option value="PABX Telephone System">PABX Telephone System</option>
-                  <option value="Other Technical Services">Other Technical Services</option>
+                  <option value="Other / Multiple Systems">Other / Multiple Systems</option>
                 </select>
               </div>
 
-              {/* DATE & 12-HR TIME SYSTEM */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Preferred Date</label>
                   <input 
                     type="date" 
                     value={siteVisitForm.preferredDate}
                     onChange={(e) => setSiteVisitForm({...siteVisitForm, preferredDate: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 text-slate-700"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Preferred Time (12-hr)</label>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Preferred Time</label>
+                  <div className="flex gap-1">
                     <select 
                       value={siteVisitForm.timeHour}
                       onChange={(e) => setSiteVisitForm({...siteVisitForm, timeHour: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700"
+                      className="w-full px-2 py-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50"
                     >
-                      {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    <select 
-                      value={siteVisitForm.timeMinute}
-                      onChange={(e) => setSiteVisitForm({...siteVisitForm, timeMinute: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700"
-                    >
-                      {['00', '15', '30', '45'].map(m => (
-                        <option key={m} value={m}>{m}</option>
+                      {Array.from({length: 12}, (_, i) => i + 1).map(h => (
+                        <option key={h} value={h < 10 ? `0${h}` : `${h}`}>{h < 10 ? `0${h}` : h}</option>
                       ))}
                     </select>
                     <select 
                       value={siteVisitForm.timePeriod}
                       onChange={(e) => setSiteVisitForm({...siteVisitForm, timePeriod: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700 font-bold"
+                      className="px-2 py-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50"
                     >
                       <option value="AM">AM</option>
                       <option value="PM">PM</option>
@@ -890,89 +891,16 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* REQUEST NOW BUTTON */}
               <button 
-                type="submit" 
-                className="w-full py-3.5 rounded-xl bg-[#25D366] text-white font-bold text-sm hover:bg-[#20ba5a] transition shadow-lg flex items-center justify-center gap-2 mt-4 uppercase tracking-wider"
+                type="submit"
+                className="w-full py-3 px-6 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition shadow-lg mt-2"
               >
-                <span>Request Now</span>
-                <Send className="w-4 h-4 fill-white text-[#25D366]" />
+                Confirm via WhatsApp
               </button>
             </form>
-
           </div>
         </div>
       )}
-
-      {/* CONTACT & FOOTER */}
-      <footer id="contact" className="bg-[#0A192F] text-slate-300 pt-16 pb-12 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-slate-800">
-            
-            <div className="space-y-4">
-              <a href="#" className="flex items-center">
-                <img 
-                  src="/Logo.jpeg" 
-                  alt="Tygrom Integrated Solutions" 
-                  className="h-12 w-auto object-contain rounded-md"
-                />
-              </a>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Integrated smart home, security, IT, and automation solutions across Kerala.
-              </p>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Direct Contact</h5>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <a href="https://wa.me/916235625272" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-slate-400 hover:text-[#25D366] transition">
-                    <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" />
-                    <span>WhatsApp: +91 6235625272</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+916235625272" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
-                    <Phone className="w-4 h-4 text-[#00B4D8] shrink-0" />
-                    <span>+91 6235625272</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:info@tygrom.in" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
-                    <Mail className="w-4 h-4 text-[#00B4D8] shrink-0" />
-                    <span>info@tygrom.in</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Location</h5>
-              <div className="flex items-start gap-3 text-sm text-slate-400">
-                <MapPin className="w-4 h-4 text-[#00B4D8] mt-1 shrink-0" />
-                <span>Randathani, Kerala, India</span>
-              </div>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Working Hours</h5>
-              <div className="flex items-start gap-3 text-sm text-slate-400">
-                <Clock className="w-4 h-4 text-[#00B4D8] mt-1 shrink-0" />
-                <div>
-                  <p>Monday - Saturday</p>
-                  <p className="text-white font-medium">8:00 AM - 6:00 PM</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4 text-center sm:text-left">
-            <p>© {new Date().getFullYear()} Tygrom Integrated Solutions. All rights reserved.</p>
-            <p>Designed with MinimalTech Precision.</p>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );
