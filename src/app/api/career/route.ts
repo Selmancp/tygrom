@@ -40,21 +40,21 @@ export async function POST(request: Request) {
       }
     `;
 
-    // Configure Zoho SMTP Transporter
+    // Configure Zoho SMTP Transporter using exact Vercel environment variables
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtppro.zoho.in',
-      port: Number(process.env.SMTP_PORT) || 465,
-      secure: true, // true for 465, false for other ports
+      host: 'smtppro.zoho.in',
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.ZOHO_USER,
+        pass: process.env.ZOHO_APP_PASSWORD,
       },
     });
 
     // Send Email
     await transporter.sendMail({
-      from: `"Tygrom Careers" <${process.env.SMTP_USER}>`,
-      to: process.env.TO_EMAIL || process.env.SMTP_USER,
+      from: `"Tygrom Careers" <${process.env.ZOHO_USER}>`,
+      to: process.env.ZOHO_USER,
       subject: `New Application: ${name} (${applicantType})`,
       html: emailHtml,
       attachments: attachments,
