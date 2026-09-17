@@ -310,7 +310,6 @@ export default function Home() {
                   Smart Automation & ELV Technology Partner
                 </div>
                 
-                {/* STRICT 2-LINE FORMAT: FIRST LINE "Intelligence,", SECOND LINE "Integrated Your Space." */}
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-3 sm:mb-4 drop-shadow-md">
                   Intelligence,<br />
                   Integrated Your Space.
@@ -402,7 +401,6 @@ export default function Home() {
                 <h3 className="text-3xl sm:text-4xl font-bold text-[#0A192F]">Our Integrated Solutions</h3>
               </div>
 
-              {/* 2 columns on mobile (grid-cols-2), 2 on md, 3 on lg */}
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
                 {services.map((srv, idx) => {
                   return (
@@ -431,7 +429,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* INQUIRE BUTTON: Reduced size across all views, left-aligned, no extra spacing inside */}
                       <div className="px-3 sm:px-8 pb-3 sm:pb-8 flex items-center justify-start">
                         <a 
                           href="https://wa.me/916235625272" 
@@ -531,6 +528,7 @@ export default function Home() {
                 </button>
               </div>
             ) : careerPath === 'fresher' ? (
+              /* FRESHER FORM */
               <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-10">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
                   <button 
@@ -584,57 +582,52 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Education Qualification & Degree *</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Education Qualification *</label>
                       <input 
                         type="text" 
                         required
                         value={fresherForm.education}
                         onChange={(e) => setFresherForm({...fresherForm, education: e.target.value})}
-                        placeholder="e.g. Diploma in Electronics / B.Tech"
+                        placeholder="e.g. B.Tech / Diploma in ECE or CSE"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                       />
                     </div>
                   </div>
 
-                  <div className="bg-sky-50/60 border border-sky-100 p-5 rounded-xl">
-                    <label className="block text-xs font-extrabold uppercase tracking-wider text-[#0A192F] mb-1">
-                      ⭐ Personality & Life Goal: What drives you, and what are your main career targets? *
-                    </label>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Personality & Career Goals *</label>
                     <textarea 
+                      rows={4}
                       required
-                      rows={3}
                       value={fresherForm.personalityGoal}
                       onChange={(e) => setFresherForm({...fresherForm, personalityGoal: e.target.value})}
-                      placeholder="e.g. I am a quick learner, disciplined, and eager to master smart automation..."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-white"
+                      placeholder="Tell us a bit about yourself, why you want to work in ELV/Smart Tech, and your career ambitions..."
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 resize-none"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Your CV / Resume *</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                          <Upload className="w-8 h-8 mb-2 text-[#00B4D8]" />
-                          <p className="text-sm text-slate-600 font-medium">
-                            {fresherForm.cv ? <span className="text-[#00B4D8] font-bold">{fresherForm.cv.name}</span> : "Click to upload CV"}
-                          </p>
-                        </div>
-                        <input type="file" required accept=".pdf,.doc,.docx" onChange={handleFresherFileChange} className="hidden" />
-                      </label>
-                    </div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Resume / CV</label>
+                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-[#00B4D8] bg-slate-50 transition">
+                      <Upload className="w-8 h-8 text-slate-400 mb-2" />
+                      <span className="text-sm font-medium text-slate-600">
+                        {fresherForm.cv ? fresherForm.cv.name : 'Click to upload PDF or DOCX'}
+                      </span>
+                      <input type="file" accept=".pdf,.doc,.docx" onChange={handleFresherFileChange} className="hidden" />
+                    </label>
                   </div>
 
                   <button 
-                    type="submit" 
-                    className="w-full py-4 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition shadow-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    className="w-full py-4 bg-[#00B4D8] text-white font-bold rounded-xl hover:bg-[#0799ba] transition shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider text-xs"
                   >
-                    <span>Submit</span>
-                    <Send className="w-4 h-4 text-white" />
+                    <Send className="w-4 h-4" />
+                    Submit Application
                   </button>
                 </form>
               </div>
             ) : (
+              /* EXPERIENCED FORM */
               <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-10">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
                   <button 
@@ -658,7 +651,7 @@ export default function Home() {
                         required
                         value={expForm.fullName}
                         onChange={(e) => setExpForm({...expForm, fullName: e.target.value})}
-                        placeholder="e.g. Muhammed Ali"
+                        placeholder="e.g. Anish V."
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                       />
                     </div>
@@ -675,9 +668,9 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Phone / WhatsApp Number *</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Phone Number *</label>
                       <input 
                         type="tel" 
                         required
@@ -688,67 +681,60 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Position Applying For *</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Applying For *</label>
                       <select 
                         value={expForm.position}
                         onChange={(e) => setExpForm({...expForm, position: e.target.value})}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
                       >
                         <option value="Field Technician / Installer">Field Technician / Installer</option>
-                        <option value="Smart Home Programmer">Smart Home Programmer</option>
-                        <option value="CCTV & Networking Engineer">CCTV & Networking Engineer</option>
-                        <option value="Sales & Business Development">Sales & Business Development</option>
+                        <option value="ELV Systems Engineer">ELV Systems Engineer</option>
+                        <option value="Smart Automation Specialist">Smart Automation Specialist</option>
+                        <option value="Project Manager">Project Manager</option>
                       </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Years of Exp. *</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={expForm.yearsOfExp}
+                        onChange={(e) => setExpForm({...expForm, yearsOfExp: e.target.value})}
+                        placeholder="e.g. 3 Years"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                      />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Years of Relevant Experience *</label>
-                    <input 
-                      type="text" 
-                      required
-                      value={expForm.yearsOfExp}
-                      onChange={(e) => setExpForm({...expForm, yearsOfExp: e.target.value})}
-                      placeholder="e.g. 4 Years"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                    />
-                  </div>
-
-                  <div className="bg-sky-50/60 border border-sky-100 p-5 rounded-xl">
-                    <label className="block text-xs font-extrabold uppercase tracking-wider text-[#0A192F] mb-1">
-                      ⭐ Experience Highlights: Core technical strengths & major project achievements *
-                    </label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Technical Strengths & Past Projects *</label>
                     <textarea 
+                      rows={4}
                       required
-                      rows={3}
                       value={expForm.technicalStrengths}
                       onChange={(e) => setExpForm({...expForm, technicalStrengths: e.target.value})}
-                      placeholder="e.g., Expert in configuring Hikvision NVR arrays and structured Cat6 fiber management..."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-white"
+                      placeholder="Detail your experience with CCTV, Gate Automation, Smart Lighting, Networking, IP-PBX, etc."
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 resize-none"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Your CV / Resume *</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
-                          <Upload className="w-8 h-8 mb-2 text-[#00B4D8]" />
-                          <p className="text-sm text-slate-600 font-medium">
-                            {expForm.cv ? <span className="text-[#00B4D8] font-bold">{expForm.cv.name}</span> : "Click to upload CV"}
-                          </p>
-                        </div>
-                        <input type="file" required accept=".pdf,.doc,.docx" onChange={handleExpFileChange} className="hidden" />
-                      </label>
-                    </div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Resume / CV</label>
+                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-[#00B4D8] bg-slate-50 transition">
+                      <Upload className="w-8 h-8 text-slate-400 mb-2" />
+                      <span className="text-sm font-medium text-slate-600">
+                        {expForm.cv ? expForm.cv.name : 'Click to upload PDF or DOCX'}
+                      </span>
+                      <input type="file" accept=".pdf,.doc,.docx" onChange={handleExpFileChange} className="hidden" />
+                    </label>
                   </div>
 
                   <button 
-                    type="submit" 
-                    className="w-full py-4 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition shadow-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    className="w-full py-4 bg-[#00B4D8] text-white font-bold rounded-xl hover:bg-[#0799ba] transition shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider text-xs"
                   >
-                    <span>Submit</span>
-                    <Send className="w-4 h-4 text-white" />
+                    <Send className="w-4 h-4" />
+                    Submit Application
                   </button>
                 </form>
               </div>
@@ -757,131 +743,135 @@ export default function Home() {
         </section>
       )}
 
-      {/* SITE VISIT POPUP MODAL FORM */}
-      {isSiteVisitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden relative">
-            
-            {/* Modal Header */}
-            <div className="bg-[#0A192F] px-6 py-4 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#00B4D8]" />
-                <h3 className="font-bold text-base">Book Free Site Visit</h3>
-              </div>
-              <button 
-                onClick={() => setIsSiteVisitModalOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-800 transition text-slate-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
+      {/* FOOTER */}
+      <footer id="contact" className="bg-[#0A192F] text-slate-400 py-12 px-4 sm:px-8 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-white font-bold text-lg mb-3">Tygrom Integrated Solutions</h3>
+            <p className="text-xs leading-relaxed text-slate-400">
+              Your trusted automation, security, networking, and ELV technology integration partner across Kerala.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold text-sm mb-3">Quick Contact</h4>
+            <div className="space-y-2 text-xs">
+              <p className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#00B4D8]" />
+                Randathani, Kerala
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-[#00B4D8]" />
+                +91 6235625272
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#00B4D8]" />
+                info@tygrom.in
+              </p>
             </div>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold text-sm mb-3">Working Hours</h4>
+            <p className="text-xs flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#00B4D8]" />
+              Monday - Saturday: 8:00 AM - 6:00 PM
+            </p>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+          © {new Date().getFullYear()} Tygrom Integrated Solutions. All rights reserved.
+        </div>
+      </footer>
 
-            {/* Modal Form Body */}
-            <form onSubmit={handleSiteVisitSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+      {/* SITE VISIT MODAL */}
+      {isSiteVisitModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setIsSiteVisitModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h3 className="text-xl font-bold text-[#0A192F] mb-1">Book Free Site Visit</h3>
+            <p className="text-xs text-slate-500 mb-6">Schedule an expert technical inspection for your property.</p>
+
+            <form onSubmit={handleSiteVisitSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Contact Person *</label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                  <input 
-                    type="text" 
-                    required
-                    value={siteVisitForm.contactPerson}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, contactPerson: e.target.value})}
-                    placeholder="Enter contact person name"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                  />
-                </div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Contact Name *</label>
+                <input 
+                  type="text" 
+                  required
+                  value={siteVisitForm.contactPerson}
+                  onChange={(e) => setSiteVisitForm({...siteVisitForm, contactPerson: e.target.value})}
+                  placeholder="Your Name"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
+                />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Phone / WhatsApp Number *</label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Phone *</label>
                   <input 
                     type="tel" 
                     required
                     value={siteVisitForm.phone}
                     onChange={(e) => setSiteVisitForm({...siteVisitForm, phone: e.target.value})}
                     placeholder="+91 XXXXXXXXXX"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Site Location / Area in Kerala *</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Location *</label>
                   <input 
                     type="text" 
                     required
                     value={siteVisitForm.location}
                     onChange={(e) => setSiteVisitForm({...siteVisitForm, location: e.target.value})}
-                    placeholder="e.g. Randathani, Malappuram"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                    placeholder="City / Area"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Purpose / System Required *</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">System Required *</label>
                 <select 
                   value={siteVisitForm.purpose}
                   onChange={(e) => setSiteVisitForm({...siteVisitForm, purpose: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
                 >
-                  <option value="Smart Home Automation">Smart Home Automation</option>
-                  <option value="Smart Office Automation">Smart Office Automation</option>
-                  <option value="CCTV & Security Systems">CCTV & Security Systems</option>
-                  <option value="Access Control & Gate Automation">Access Control & Gate Automation</option>
-                  <option value="Video Intercom & Video Door Phone Systems">Video Intercom & Video Door Phone Systems</option>
-                  <option value="Networking & WiFi Solutions">Networking & WiFi Solutions</option>
-                  <option value="Home Theater & Audio-Video">Home Theater & Audio-Video</option>
-                  <option value="Building Automation">Building Automation</option>
-                  <option value="Smart Swimming Pool">Smart Swimming Pool</option>
-                  <option value="Electrical & IT Solutions">Electrical & IT Solutions</option>
-                  <option value="Digital Signage Solution">Digital Signage Solution</option>
-                  <option value="PABX Telephone System">PABX Telephone System</option>
-                  <option value="Other Technical Services">Other Technical Services</option>
+                  {services.map((srv, idx) => (
+                    <option key={idx} value={srv.title}>{srv.title}</option>
+                  ))}
+                  <option value="Complete ELV Package">Complete ELV & Smart Package</option>
                 </select>
               </div>
 
-              {/* DATE & 12-HR TIME SYSTEM */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Preferred Date</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Preferred Date</label>
                   <input 
                     type="date" 
                     value={siteVisitForm.preferredDate}
                     onChange={(e) => setSiteVisitForm({...siteVisitForm, preferredDate: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 text-slate-700"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Preferred Time (12-hr)</label>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Preferred Time</label>
+                  <div className="flex gap-1">
                     <select 
                       value={siteVisitForm.timeHour}
                       onChange={(e) => setSiteVisitForm({...siteVisitForm, timeHour: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700"
+                      className="w-full px-2 py-2.5 rounded-lg border border-slate-200 text-xs bg-slate-50"
                     >
-                      {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    <select 
-                      value={siteVisitForm.timeMinute}
-                      onChange={(e) => setSiteVisitForm({...siteVisitForm, timeMinute: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700"
-                    >
-                      {['00', '15', '30', '45'].map(m => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
+                      {['08','09','10','11','12','01','02','03','04','05'].map(h => <option key={h} value={h}>{h}</option>)}
                     </select>
                     <select 
                       value={siteVisitForm.timePeriod}
                       onChange={(e) => setSiteVisitForm({...siteVisitForm, timePeriod: e.target.value})}
-                      className="px-2 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50 text-slate-700 font-bold"
+                      className="px-2 py-2.5 rounded-lg border border-slate-200 text-xs bg-slate-50"
                     >
                       <option value="AM">AM</option>
                       <option value="PM">PM</option>
@@ -890,89 +880,16 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* REQUEST NOW BUTTON */}
               <button 
-                type="submit" 
-                className="w-full py-3.5 rounded-xl bg-[#25D366] text-white font-bold text-sm hover:bg-[#20ba5a] transition shadow-lg flex items-center justify-center gap-2 mt-4 uppercase tracking-wider"
+                type="submit"
+                className="w-full py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition shadow-md text-xs uppercase tracking-wider mt-2"
               >
-                <span>Request Now</span>
-                <Send className="w-4 h-4 fill-white text-[#25D366]" />
+                Request Booking via WhatsApp
               </button>
             </form>
-
           </div>
         </div>
       )}
-
-      {/* CONTACT & FOOTER */}
-      <footer id="contact" className="bg-[#0A192F] text-slate-300 pt-16 pb-12 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-slate-800">
-            
-            <div className="space-y-4">
-              <a href="#" className="flex items-center">
-                <img 
-                  src="/Logo.jpeg" 
-                  alt="Tygrom Integrated Solutions" 
-                  className="h-12 w-auto object-contain rounded-md"
-                />
-              </a>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Integrated smart home, security, IT, and automation solutions across Kerala.
-              </p>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Direct Contact</h5>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <a href="https://wa.me/916235625272" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-slate-400 hover:text-[#25D366] transition">
-                    <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" />
-                    <span>WhatsApp: +91 6235625272</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+916235625272" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
-                    <Phone className="w-4 h-4 text-[#00B4D8] shrink-0" />
-                    <span>+91 6235625272</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:info@tygrom.in" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
-                    <Mail className="w-4 h-4 text-[#00B4D8] shrink-0" />
-                    <span>info@tygrom.in</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Location</h5>
-              <div className="flex items-start gap-3 text-sm text-slate-400">
-                <MapPin className="w-4 h-4 text-[#00B4D8] mt-1 shrink-0" />
-                <span>Randathani, Kerala, India</span>
-              </div>
-            </div>
-
-            <div>
-              <h5 className="text-white font-semibold text-sm mb-4">Working Hours</h5>
-              <div className="flex items-start gap-3 text-sm text-slate-400">
-                <Clock className="w-4 h-4 text-[#00B4D8] mt-1 shrink-0" />
-                <div>
-                  <p>Monday - Saturday</p>
-                  <p className="text-white font-medium">8:00 AM - 6:00 PM</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4 text-center sm:text-left">
-            <p>© {new Date().getFullYear()} Tygrom Integrated Solutions. All rights reserved.</p>
-            <p>Designed with MinimalTech Precision.</p>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );
