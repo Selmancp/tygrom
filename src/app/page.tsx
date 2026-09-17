@@ -91,7 +91,7 @@ export default function Home() {
       `Personality & Goal: ${fresherForm.personalityGoal}\n` +
       `Attached CV File: ${cvName}`
     );
-    window.location.href = `mailto:Info.tygrom@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
     setFormSubmitted(true);
   };
 
@@ -109,7 +109,7 @@ export default function Home() {
       `Technical Strengths: ${expForm.technicalStrengths}\n` +
       `Attached CV File: ${cvName}`
     );
-    window.location.href = `mailto:Info.tygrom@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
     setFormSubmitted(true);
   };
 
@@ -167,9 +167,9 @@ export default function Home() {
               <Phone className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
               <span>+91 6235625272</span>
             </a>
-            <a href="mailto:Info.tygrom@gmail.com" className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
+            <a href="mailto:info@tygrom.in" className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
               <Mail className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
-              <span>Info.tygrom@gmail.com</span>
+              <span>info@tygrom.in</span>
             </a>
           </div>
         </div>
@@ -341,7 +341,7 @@ export default function Home() {
                   </a>
 
                   <a 
-                    href="mailto:Info.tygrom@gmail.com" 
+                    href="mailto:info@tygrom.in" 
                     className="w-max px-4 py-2.5 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700 transition shadow-lg flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider border border-slate-700"
                   >
                     <Mail className="w-3.5 h-3.5 text-[#00B4D8]" />
@@ -938,9 +938,9 @@ export default function Home() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:Info.tygrom@gmail.com" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
+                  <a href="mailto:info@tygrom.in" className="flex items-center gap-3 text-slate-400 hover:text-[#00B4D8] transition">
                     <Mail className="w-4 h-4 text-[#00B4D8] shrink-0" />
-                    <span>Info.tygrom@gmail.com</span>
+                    <span>info@tygrom.in</span>
                   </a>
                 </li>
               </ul>
