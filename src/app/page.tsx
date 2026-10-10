@@ -1,896 +1,1119 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  CheckCircle2, 
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  CheckCircle2,
   ChevronRight,
   MessageCircle,
   Menu,
   X,
   Briefcase,
-  Upload,
-  Send,
   GraduationCap,
   ArrowLeft,
+  Send,
   Home as HomeIcon,
   Info,
   Wrench,
-  Calendar,
-  User
-} from 'lucide-react';
+} from "lucide-react";
+
+const CONTACT = {
+  display: "+91 6235625272",
+  phone: "+916235625272",
+  whatsapp: "916235625272",
+  email: "info@tygrom.in",
+};
+
+const navigation = [
+  { label: "Home", href: "#home", icon: HomeIcon },
+  { label: "About Us", href: "#about", icon: Info },
+  { label: "Services", href: "#services", icon: Wrench },
+  { label: "Careers", href: "#careers", icon: Briefcase },
+  { label: "Contact", href: "#contact", icon: Mail },
+];
+
+const services = [
+  {
+    title: "Smart Home Automation",
+    desc: "Control lighting, climate, curtains and everyday scenes through your phone or compatible voice assistant.",
+    image: "/smart-home.png",
+  },
+  {
+    title: "Smart Office Automation",
+    desc: "Connect office lighting, meeting-room technology and energy controls for more convenient daily operation.",
+    image: "/smart-office.png",
+  },
+  {
+    title: "CCTV & Security Systems",
+    desc: "Video surveillance, remote viewing and recording solutions designed around your property and security needs.",
+    image: "/cctv-security.png",
+  },
+  {
+    title: "Access Control & Gate Automation",
+    desc: "Biometric attendance, RFID door access and automated sliding or swing gates with suitable safety controls.",
+    image: "/access-control.png",
+  },
+  {
+    title: "Video Intercom & Video Door Phone Systems",
+    desc: "See and speak to visitors, with mobile communication and remote unlocking on compatible systems.",
+    image: "/video-intercom.png",
+  },
+  {
+    title: "Networking & WiFi Solutions",
+    desc: "Reliable Wi-Fi coverage, structured cabling, network racks and connectivity for homes and businesses.",
+    image: "/networking.png",
+  },
+  {
+    title: "Home Theater & Audio-Video",
+    desc: "Home theater, surround sound, multi-room audio and audio-video integration tailored to your space.",
+    image: "/home-theater.png",
+  },
+  {
+    title: "Building Automation",
+    desc: "Integrated building management and ELV systems for coordinated monitoring and control of commercial spaces.",
+    image: "/building-automation.png",
+  },
+  {
+    title: "Smart Swimming Pool",
+    desc: "Pool consultation and integration of filtration controls, lighting and compatible monitoring systems.",
+    image: "/smart-pool.png",
+  },
+  {
+    title: "Electrical & IT Solutions",
+    desc: "Electrical installation, power distribution, UPS backup and IT infrastructure support.",
+    image: "/electrical-it.png",
+  },
+  {
+    title: "Digital Signage Solutions",
+    desc: "Commercial displays, video walls and centrally managed content for customer-facing spaces.",
+    image: "/digital-signage.png",
+  },
+  {
+    title: "PABX Telephone Systems",
+    desc: "IP-PBX systems, telephone extensions and business voice communication configured for your team.",
+    image: "/pabx.png",
+  },
+];
+
+const inputClass =
+  "w-full min-w-0 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-900 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700/20";
+
+const primaryButton =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700";
+
+function whatsappLink(message?: string) {
+  const base = `https://wa.me/${CONTACT.whatsapp}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
+function localDate() {
+  const date = new Date();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'home' | 'careers'>('home');
-  
-  // Site Visit Modal State
-  const [isSiteVisitModalOpen, setIsSiteVisitModalOpen] = useState(false);
-  const [siteVisitForm, setSiteVisitForm] = useState({
-    contactPerson: '',
-    phone: '',
-    location: '',
-    purpose: 'Smart Home Automation',
-    preferredDate: '',
-    timeHour: '10',
-    timeMinute: '00',
-    timePeriod: 'AM'
-  });
+  const [careerPath, setCareerPath] = useState<
+    "fresher" | "experienced" | null
+  >(null);
 
-  // Career Sub-Flow State
-  const [careerPath, setCareerPath] = useState<'fresher' | 'experienced' | null>(null);
+  const [applicationDraft, setApplicationDraft] = useState<{
+    subject: string;
+    body: string;
+  } | null>(null);
 
-  // Fresher Form State
-  const [fresherForm, setFresherForm] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    education: '',
-    personalityGoal: '', 
-    cv: null as File | null
-  });
+  const bookingDialog = useRef<HTMLDialogElement>(null);
 
-  // Experienced Form State
-  const [expForm, setExpForm] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    position: 'Field Technician / Installer',
-    yearsOfExp: '',
-    technicalStrengths: '', 
-    cv: null as File | null
-  });
+  function openBooking() {
+    setMobileMenuOpen(false);
+    bookingDialog.current?.showModal();
+  }
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  function handleSiteVisitSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-  const handleFresherFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFresherForm({ ...fresherForm, cv: e.target.files[0] });
-    }
-  };
+    const data = new FormData(event.currentTarget);
+    const value = (name: string) =>
+      String(data.get(name) ?? "").trim();
 
-  const handleExpFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setExpForm({ ...expForm, cv: e.target.files[0] });
-    }
-  };
+    const message = [
+      "*New Site Visit Request — Tygrom*",
+      "",
+      `Contact person: ${value("contactPerson")}`,
+      `Phone: ${value("phone")}`,
+      `Site location: ${value("location")}`,
+      `System required: ${value("purpose")}`,
+      `Preferred date: ${value("preferredDate") || "Please contact me"}`,
+      `Preferred time: ${value("preferredTime") || "Please contact me"}`,
+      "",
+      "Please confirm availability and booking details.",
+    ].join("\n");
 
-  const handleFresherSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cvName = fresherForm.cv ? fresherForm.cv.name : 'No CV Uploaded';
-    const subject = encodeURIComponent(`New Fresher Application - ${fresherForm.fullName}`);
-    const body = encodeURIComponent(
-      `New Fresher Career Application:\n\n` +
-      `Full Name: ${fresherForm.fullName}\n` +
-      `Email: ${fresherForm.email}\n` +
-      `Phone: ${fresherForm.phone}\n` +
-      `Education: ${fresherForm.education}\n` +
-      `Personality & Goal: ${fresherForm.personalityGoal}\n` +
-      `Attached CV File: ${cvName}`
+    window.open(
+      whatsappLink(message),
+      "_blank",
+      "noopener,noreferrer"
     );
-    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
-    setFormSubmitted(true);
-  };
+  }
 
-  const handleExpSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cvName = expForm.cv ? expForm.cv.name : 'No CV Uploaded';
-    const subject = encodeURIComponent(`New Experienced Application (${expForm.position}) - ${expForm.fullName}`);
-    const body = encodeURIComponent(
-      `New Experienced Career Application:\n\n` +
-      `Full Name: ${expForm.fullName}\n` +
-      `Email: ${expForm.email}\n` +
-      `Phone: ${expForm.phone}\n` +
-      `Position Applying For: ${expForm.position}\n` +
-      `Years of Experience: ${expForm.yearsOfExp}\n` +
-      `Technical Strengths: ${expForm.technicalStrengths}\n` +
-      `Attached CV File: ${cvName}`
-    );
-    window.location.href = `mailto:info@tygrom.in?subject=${subject}&body=${body}`;
-    setFormSubmitted(true);
-  };
+  function handleCareerSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-  const handleSiteVisitSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formattedTime = `${siteVisitForm.timeHour}:${siteVisitForm.timeMinute} ${siteVisitForm.timePeriod}`;
-    const message = 
-      `*New Site Visit Request - Tygrom*%0A` +
-      `--------------------------------%0A` +
-      `*Contact Person:* ${encodeURIComponent(siteVisitForm.contactPerson)}%0A` +
-      `*Phone:* ${encodeURIComponent(siteVisitForm.phone)}%0A` +
-      `*Site Location:* ${encodeURIComponent(siteVisitForm.location)}%0A` +
-      `*Purpose/System Required:* ${encodeURIComponent(siteVisitForm.purpose)}%0A` +
-      `*Preferred Date:* ${encodeURIComponent(siteVisitForm.preferredDate || 'As soon as possible')}%0A` +
-      `*Preferred Time:* ${encodeURIComponent(formattedTime)}`;
+    const data = new FormData(event.currentTarget);
+    const value = (name: string) =>
+      String(data.get(name) ?? "").trim();
 
-    const whatsappUrl = `https://wa.me/916235625272?text=${message}`;
-    window.open(whatsappUrl, '_blank');
-    setIsSiteVisitModalOpen(false);
-  };
+    const experienced = careerPath === "experienced";
 
-  const services = [
-    { title: "Smart Home Automation", desc: "App and voice-controlled lighting, climate, curtain, and intelligent scene control.", image: "/smart-home.png" },
-    { title: "Smart Office Automation", desc: "Integrated conference room systems, smart lighting, and energy management.", image: "/smart-office.png" },
-    { title: "CCTV & Security Systems", desc: "High-definition AI surveillance, remote live view, and 24/7 video recording.", image: "/cctv-security.png" },
-    { title: "Access Control & Gate Automation", desc: "Biometric attendance, RFID entry, and automated sliding/swing gate motors.", image: "/access-control.png" },
-    { title: "Video Intercom & Video Door Phone Systems", desc: "Smart IP video door phones with mobile app unlock and remote communication.", image: "/video-intercom.png" },
-    { title: "Networking & WiFi Solutions", desc: "Seamless mesh Wi-Fi 6, structured LAN cabling, firewall, and rack setup.", image: "/networking.png" },
-    { title: "Home Theater & Audio-Video", desc: "Immersive surround sound, acoustic paneling, and multi-room audio zones.", image: "/home-theater.png" },
-    { title: "Building Automation", desc: "Centralized ELV and BMS automation for commercial spaces and multi-story sites.", image: "/building-automation.png" },
-    { title: "Smart Swimming Pool", desc: "Automated pool filtration, LED underwater lighting, and temperature controls.", image: "/smart-pool.png" },
-    { title: "Electrical & IT Solutions", desc: "Professional power distribution, UPS backup, server racks, and maintenance.", image: "/electrical-it.png" },
-    { title: "Digital Signage Solution", desc: "High-impact commercial displays, video walls, and remote content management.", image: "/digital-signage.png" },
-    { title: "PABX Telephone System", desc: "IP-PBX voice solutions, intercom extension setups, and unified business communication.", image: "/pabx.png" },
-  ];
+    const subject = experienced
+      ? `Experienced Application — ${value("position")} — ${value("fullName")}`
+      : `Fresher Application — ${value("fullName")}`;
+
+    const body = [
+      experienced
+        ? "Experienced Career Application"
+        : "Fresher Career Application",
+      "",
+      `Full name: ${value("fullName")}`,
+      `Email: ${value("email")}`,
+      `Phone: ${value("phone")}`,
+      ...(experienced
+        ? [
+            `Position: ${value("position")}`,
+            `Years of experience: ${value("yearsOfExp")}`,
+            `Technical strengths and projects: ${value("technicalStrengths")}`,
+          ]
+        : [
+            `Education: ${value("education")}`,
+            `Personality and career goals: ${value("personalityGoal")}`,
+          ]),
+      "",
+      "I will attach my CV to this email before sending.",
+    ].join("\n");
+
+    setApplicationDraft({ subject, body });
+  }
+
+  const draftEmailLink = applicationDraft
+    ? `mailto:${CONTACT.email}?subject=${encodeURIComponent(
+        applicationDraft.subject
+      )}&body=${encodeURIComponent(applicationDraft.body)}`
+    : `mailto:${CONTACT.email}`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-red-600 selection:text-white">
-      
-      {/* TOP HEADER / CONTACT BAR */}
-      <div className="bg-[#0A192F] text-slate-300 text-xs py-2 px-4 sm:px-8 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1 sm:gap-4">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6">
-            <div className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
-              <Clock className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
-              <span>Mon - Sat: 8:00 AM - 6:00 PM</span>
-            </div>
-            <div className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
-              <MapPin className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
-              <span>Randathani, Kerala</span>
-            </div>
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
+      {/* CONTACT BAR */}
+      <div className="bg-[#0A192F] px-4 py-3 text-xs text-slate-200 sm:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-between">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            <span className="inline-flex items-center gap-2">
+              <Clock size={15} aria-hidden="true" />
+              Mon–Sat: 8:00 AM–6:00 PM
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin size={15} aria-hidden="true" />
+              Randathani, Kerala
+            </span>
           </div>
-          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6">
-            <a href="tel:+916235625272" className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
-              <Phone className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
-              <span>+91 6235625272</span>
+
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            <a
+              href={`tel:${CONTACT.phone}`}
+              className="inline-flex items-center gap-2 hover:underline"
+            >
+              <Phone size={15} aria-hidden="true" />
+              {CONTACT.display}
             </a>
-            <a href="mailto:info@tygrom.in" className="flex items-center gap-1.5 hover:text-[#00B4D8] transition">
-              <Mail className="w-3.5 h-3.5 text-[#00B4D8] shrink-0" />
-              <span>info@tygrom.in</span>
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="inline-flex items-center gap-2 hover:underline"
+            >
+              <Mail size={15} aria-hidden="true" />
+              {CONTACT.email}
             </a>
           </div>
         </div>
       </div>
 
-      {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-3 sm:px-8 h-16 sm:h-20 flex justify-between items-center gap-2">
-          
-          {/* LOGO */}
-          <button onClick={() => { setActiveTab('home'); setCareerPath(null); }} className="flex items-center group shrink-0 text-left">
-            <img 
-              src="/Logo.jpeg" 
-              alt="Tygrom Integrated Solutions" 
-              className="h-9 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105"
+      {/* NAVIGATION WITH ICONS */}
+      <nav
+        aria-label="Main navigation"
+        className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md"
+      >
+        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-2 px-3 sm:px-8">
+          <a
+            href="#home"
+            onClick={() => setMobileMenuOpen(false)}
+            className="shrink-0"
+          >
+            <img
+              src="/Logo.jpeg"
+              alt="Tygrom Integrated Solutions — Home"
+              className="h-10 w-auto max-w-32 object-contain sm:h-14 sm:max-w-48"
             />
-          </button>
+          </a>
 
-          {/* DESKTOP NAV LINKS WITH ICONS */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
-            <button 
-              onClick={() => { setActiveTab('home'); setCareerPath(null); }} 
-              className={`transition flex items-center gap-1.5 ${activeTab === 'home' ? 'text-[#00B4D8] font-semibold' : 'hover:text-[#00B4D8]'}`}
-            >
-              <HomeIcon className="w-4 h-4" />
-              Home
-            </button>
-            <a href="#about" onClick={() => { setActiveTab('home'); setCareerPath(null); }} className="hover:text-[#00B4D8] transition flex items-center gap-1.5">
-              <Info className="w-4 h-4" />
-              About Us
-            </a>
-            <a href="#services" onClick={() => { setActiveTab('home'); setCareerPath(null); }} className="hover:text-[#00B4D8] transition flex items-center gap-1.5">
-              <Wrench className="w-4 h-4" />
-              Services
-            </a>
-            <button 
-              onClick={() => { setActiveTab('careers'); setCareerPath(null); setFormSubmitted(false); }} 
-              className={`transition flex items-center gap-1.5 ${activeTab === 'careers' ? 'text-[#00B4D8] font-semibold' : 'hover:text-[#00B4D8]'}`}
-            >
-              <Briefcase className="w-4 h-4" />
-              Careers
-            </button>
-            <a href="#contact" onClick={() => { setActiveTab('home'); setCareerPath(null); }} className="hover:text-[#00B4D8] transition flex items-center gap-1.5">
-              <Mail className="w-4 h-4" />
-              Contact
-            </a>
+          <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
+            {navigation.map(({ label, href, icon: Icon }) => (
+              <a
+                key={href}
+                href={href}
+                className="inline-flex min-h-11 items-center gap-2 py-3 text-slate-700 transition hover:text-sky-700"
+              >
+                <Icon
+                  size={18}
+                  strokeWidth={2}
+                  className="shrink-0"
+                  aria-hidden="true"
+                />
+                <span>{label}</span>
+              </a>
+            ))}
           </div>
 
-          {/* CTA BUTTON & MOBILE HAMBURGER */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <button 
-              onClick={() => setIsSiteVisitModalOpen(true)}
-              className="px-2.5 sm:px-5 py-2 sm:py-2.5 rounded-lg bg-red-600 text-white text-[11px] sm:text-sm font-semibold hover:bg-red-700 transition-colors shadow-md flex items-center whitespace-nowrap"
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={openBooking}
+              className="min-h-11 rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-700 sm:px-5 sm:text-sm"
             >
-              <span>Book Free Site Visit</span>
+              Book Free Site Visit
             </button>
 
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-lg text-slate-700 hover:bg-slate-100 transition"
-              aria-label="Toggle Menu"
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
+              className="flex h-11 w-11 items-center justify-center rounded-lg hover:bg-slate-100 lg:hidden"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X aria-hidden="true" />
+              ) : (
+                <Menu aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* MOBILE MENU DROPDOWN */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 w-full bg-white border-b border-slate-200 shadow-xl py-4 px-6 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-            <button 
-              onClick={() => { setActiveTab('home'); setCareerPath(null); setMobileMenuOpen(false); }}
-              className={`text-left font-medium text-sm transition py-2 border-b border-slate-100 flex items-center gap-2.5 ${activeTab === 'home' ? 'text-[#00B4D8] font-semibold' : 'text-slate-700 hover:text-[#00B4D8]'}`}
-            >
-              <HomeIcon className="w-4 h-4 text-[#00B4D8]" />
-              Home
-            </button>
-            <a 
-              href="#about" 
-              onClick={() => { setActiveTab('home'); setCareerPath(null); setMobileMenuOpen(false); }}
-              className="text-slate-700 font-medium text-sm hover:text-[#00B4D8] transition py-2 border-b border-slate-100 flex items-center gap-2.5"
-            >
-              <Info className="w-4 h-4 text-[#00B4D8]" />
-              About Us
-            </a>
-            <a 
-              href="#services" 
-              onClick={() => { setActiveTab('home'); setCareerPath(null); setMobileMenuOpen(false); }}
-              className="text-slate-700 font-medium text-sm hover:text-[#00B4D8] transition py-2 border-b border-slate-100 flex items-center gap-2.5"
-            >
-              <Wrench className="w-4 h-4 text-[#00B4D8]" />
-              Services
-            </a>
-            <button 
-              onClick={() => { setActiveTab('careers'); setCareerPath(null); setFormSubmitted(false); setMobileMenuOpen(false); }}
-              className={`text-left font-medium text-sm transition py-2 border-b border-slate-100 flex items-center gap-2.5 ${activeTab === 'careers' ? 'text-[#00B4D8] font-semibold' : 'text-slate-700 hover:text-[#00B4D8]'}`}
-            >
-              <Briefcase className="w-4 h-4 text-[#00B4D8]" />
-              Careers
-            </button>
-            <a 
-              href="#contact" 
-              onClick={() => { setActiveTab('home'); setCareerPath(null); setMobileMenuOpen(false); }}
-              className="text-slate-700 font-medium text-sm hover:text-[#00B4D8] transition py-2 border-b border-slate-100 flex items-center gap-2.5"
-            >
-              <Mail className="w-4 h-4 text-[#00B4D8]" />
-              Contact
-            </a>
+          <div
+            id="mobile-navigation"
+            className="border-t border-slate-100 bg-white px-5 py-3 shadow-lg lg:hidden"
+          >
+            {navigation.map(({ label, href, icon: Icon }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-50 hover:text-sky-700"
+              >
+                <Icon
+                  size={20}
+                  strokeWidth={2}
+                  className="shrink-0 text-sky-700"
+                  aria-hidden="true"
+                />
+                <span>{label}</span>
+              </a>
+            ))}
           </div>
         )}
       </nav>
 
-      {/* VIEW ROUTING */}
-      {activeTab === 'home' ? (
-        <>
-          {/* HERO SECTION */}
-          <section className="relative min-h-[calc(100vh-4rem)] sm:min-h-[calc(100vh-5rem)] bg-slate-900 overflow-hidden border-b border-slate-800 flex flex-col justify-center py-6 sm:py-10">
-            {/* Mobile Background Image */}
-            <img 
-              src="/kerala-smart-home-swimming-pool-mobile.png" 
-              alt="Kerala Smart Home Mobile View" 
-              className="absolute inset-0 w-full h-full object-cover object-center block sm:hidden"
+      <main>
+        {/* HERO */}
+        <section
+          id="home"
+          className="relative isolate flex min-h-[75svh] scroll-mt-24 items-center overflow-hidden bg-[#0A192F] py-16 sm:py-24"
+        >
+          <picture>
+            <source
+              media="(max-width: 639px)"
+              srcSet="/kerala-smart-home-swimming-pool-mobile.png"
             />
-
-            {/* Desktop Background Image */}
-            <img 
-              src="/kerala-smart-home-swimming-pool.png" 
-              alt="Kerala Smart Home Desktop View" 
-              className="absolute inset-0 w-full h-full object-cover object-center hidden sm:block"
+            <img
+              src="/kerala-smart-home-swimming-pool.png"
+              alt=""
+              fetchPriority="high"
+              className="absolute inset-0 -z-20 h-full w-full object-cover"
             />
+          </picture>
 
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/80 to-[#0A192F]/40 sm:to-transparent"></div>
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/50" />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10 w-full">
-              <div className="max-w-4xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00B4D8]/15 border border-[#00B4D8]/40 text-[#00B4D8] text-xs font-semibold mb-3 sm:mb-4 backdrop-blur-sm shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#00B4D8] animate-pulse"></span>
-                  Smart Automation & ELV Technology Partner
-                </div>
-                
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-3 sm:mb-4 drop-shadow-md">
-                  Intelligence,<br />
-                  Integrated Your Space.
-                </h1>
+          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+            <div className="max-w-3xl">
+              <p className="mb-5 text-sm font-semibold tracking-wide text-cyan-200">
+                Automation · Security · Connectivity
+              </p>
 
-                <p className="text-sm sm:text-base lg:text-lg text-slate-100 mb-6 sm:mb-8 leading-relaxed font-normal drop-shadow">
-                  Tygrom Integrated Solutions delivers advanced AI-powered smart home & office automation, integrated CCTV & proactive security, high-speed networking, advanced access control, digital video intercom, gate automation, high-end audio & video, integrated electrical, IT, connected digital signage, intelligent PABX systems, and autonomous smart swimming pool solutions, serving clients across all of Kerala.
-                </p>
-
-                {/* HERO BUTTONS */}
-                <div className="flex flex-col sm:flex-row items-start gap-2">
-                  <a 
-                    href="#services" 
-                    className="w-max px-4 py-2.5 rounded-lg bg-[#00B4D8] text-white font-bold hover:bg-[#0799ba] transition shadow-lg flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider"
-                  >
-                    Explore All Services
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </a>
-                  
-                  <a 
-                    href="https://wa.me/916235625272" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="w-max px-4 py-2.5 rounded-lg bg-[#25D366] text-white font-bold hover:bg-[#20ba5a] transition shadow-lg flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 fill-white text-[#25D366]" />
-                    WhatsApp Us
-                  </a>
-
-                  <a 
-                    href="mailto:info@tygrom.in" 
-                    className="w-max px-4 py-2.5 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700 transition shadow-lg flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider border border-slate-700"
-                  >
-                    <Mail className="w-3.5 h-3.5 text-[#00B4D8]" />
-                    Email Us
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ABOUT US */}
-          <section id="about" className="py-16 sm:py-20 bg-white border-b border-slate-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-xs font-bold text-[#00B4D8] tracking-widest uppercase mb-3">About Tygrom</h2>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#0A192F] mb-6 leading-tight">
-                    Engineering intelligent technology for seamless, safe, and connected living.
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed mb-6 text-sm sm:text-base">
-                    We design, install, integrate, and maintain reliable technology solutions for homes, offices, and commercial spaces. From precise structured cabling to complex AI surveillance and multi-zone automation, our engineering ensures total reliability.
-                  </p>
-                  <div className="space-y-3">
-                    {['Turnkey ELV & Automation Projects', 'Professional Hardware & Clean Cabling', 'Dedicated On-Site Technical Support'].map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-                        <CheckCircle2 className="w-5 h-5 text-[#00B4D8] shrink-0" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 text-white relative overflow-hidden shadow-xl">
-                  <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-[#00B4D8]/20 rounded-full blur-2xl"></div>
-                  <h4 className="text-xl font-bold text-[#90E0EF] mb-4">Complete System Integration</h4>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                    Every solution is custom-configured to meet your space's specific architecture and security demands.
-                  </p>
-                  <div className="pt-6 border-t border-slate-800 grid grid-cols-2 gap-4 text-center">
-                    <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700">
-                      <span className="block text-2xl font-bold text-white">100%</span>
-                      <span className="text-xs text-slate-400">Integrated Systems</span>
-                    </div>
-                    <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700">
-                      <span className="block text-2xl font-bold text-[#00B4D8]">Kerala</span>
-                      <span className="text-xs text-slate-400">Coverage</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* SERVICES GRID */}
-          <section id="services" className="py-16 sm:py-20 bg-slate-50">
-            <div className="max-w-7xl mx-auto px-2 sm:px-8">
-              <div className="text-center max-w-2xl mx-auto mb-16">
-                <h2 className="text-xs font-bold text-[#00B4D8] tracking-widest uppercase mb-3">Our Core Capabilities</h2>
-                <h3 className="text-3xl sm:text-4xl font-bold text-[#0A192F]">Our Integrated Solutions</h3>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
-                {services.map((srv, idx) => {
-                  return (
-                    <div 
-                      key={idx} 
-                      className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 hover:border-[#00B4D8] hover:shadow-xl transition-all group flex flex-col justify-between overflow-hidden"
-                    >
-                      <div>
-                        {srv.image && (
-                          <div className="w-full overflow-hidden bg-[#070e18] border-b border-slate-100 flex items-center justify-center">
-                            <img 
-                              src={srv.image} 
-                              alt={srv.title} 
-                              className="w-full h-auto block transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </div>
-                        )}
-
-                        <div className="p-3 sm:p-8">
-                          <h4 className="text-xs sm:text-xl font-bold text-[#0A192F] mb-1 sm:mb-3 group-hover:text-[#00B4D8] transition-colors leading-tight">
-                            {srv.title}
-                          </h4>
-                          <p className="text-slate-600 text-[11px] sm:text-sm leading-snug sm:leading-relaxed mb-3 sm:mb-6 line-clamp-3 sm:line-clamp-none">
-                            {srv.desc}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="px-3 sm:px-8 pb-3 sm:pb-8 flex items-center justify-start">
-                        <a 
-                          href="https://wa.me/916235625272" 
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-auto py-1 px-2.5 sm:py-1.5 sm:px-3 rounded sm:rounded-md bg-[#00B4D8] text-white hover:bg-[#0096b4] transition-colors shadow-sm font-semibold text-[9px] sm:text-[11px] inline-flex items-center justify-start gap-1 uppercase tracking-wider text-left whitespace-nowrap"
-                        >
-                          <span className="leading-none">Inquire</span>
-                          <MessageCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white text-[#00B4D8] shrink-0" />
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        </>
-      ) : (
-        /* CAREERS PAGE VIEW */
-        <section className="py-16 sm:py-24 bg-slate-50 flex-grow">
-          <div className="max-w-4xl mx-auto px-4 sm:px-8">
-            <div className="text-center mb-12">
-              <span className="px-3 py-1 rounded-full bg-[#00B4D8]/10 text-[#00B4D8] text-xs font-bold uppercase tracking-wider">
-                Join Our Team
-              </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0A192F] mt-3 mb-4">
-                Build Your Career With Tygrom
+              <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Smart Technology.
+                <br />
+                Seamlessly Integrated.
               </h1>
-              <p className="text-slate-600 max-w-xl mx-auto text-sm sm:text-base italic">
-                "Your future is created by what you do today, not tomorrow. Take the first step toward a brilliant career in smart technology and innovation with us."
+
+              <p className="mb-8 max-w-2xl text-base leading-relaxed text-slate-100 sm:text-lg">
+                Smart home automation, security, networking and pool
+                automation for homes and businesses across Kerala.
+                Based in Randathani, Tygrom designs, installs and
+                supports systems tailored to your space.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={openBooking}
+                  className={primaryButton}
+                >
+                  Discuss Your Project
+                  <ChevronRight size={18} aria-hidden="true" />
+                </button>
+
+                <a
+                  href={whatsappLink(
+                    "Hello Tygrom, I would like to discuss a project."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white hover:bg-green-800"
+                >
+                  <MessageCircle size={18} aria-hidden="true" />
+                  WhatsApp Us
+                </a>
+
+                <a
+                  href="#services"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                >
+                  Explore Services
+                </a>
+              </div>
+
+              <p className="mt-8 text-sm text-slate-300">
+                Building Trust, Delivering Excellence.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ABOUT */}
+        <section
+          id="about"
+          className="scroll-mt-24 border-b border-slate-200 bg-white py-16 sm:py-20"
+        >
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-2">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
+                About Tygrom
+              </p>
+
+              <h2 className="mb-5 text-3xl font-bold leading-tight text-[#0A192F]">
+                Technology designed around your everyday needs.
+              </h2>
+
+              <p className="mb-6 leading-relaxed text-slate-600">
+                We design, install, integrate and maintain technology
+                for homes, offices and commercial spaces. Our work
+                connects automation, security, electrical systems and
+                IT infrastructure into solutions that are practical
+                to operate.
+              </p>
+
+              <ul className="space-y-4">
+                {[
+                  "Solutions planned for your space and requirements",
+                  "Professional installation and structured cabling",
+                  "System setup, user guidance and technical support",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2
+                      size={21}
+                      className="mt-0.5 shrink-0 text-sky-700"
+                      aria-hidden="true"
+                    />
+                    <span className="text-slate-700">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl bg-[#0A192F] p-7 text-white sm:p-9">
+              <h3 className="mb-4 text-2xl font-bold">
+                One coordinated solution.
+              </h3>
+
+              <p className="mb-6 leading-relaxed text-slate-300">
+                From a single system upgrade to an integrated project,
+                we help you select compatible technology and plan
+                installation around your property.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
+                <div>
+                  <p className="font-semibold text-cyan-200">Homes</p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Comfort and security
+                  </p>
+                </div>
+                <div>
+                  <p className="font-semibold text-cyan-200">
+                    Businesses
+                  </p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Connected operations
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICES */}
+        <section
+          id="services"
+          className="scroll-mt-24 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mx-auto mb-10 max-w-2xl text-center">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
+                Our Services
+              </p>
+
+              <h2 className="mb-4 text-3xl font-bold text-[#0A192F] sm:text-4xl">
+                Integrated solutions for your space.
+              </h2>
+
+              <p className="leading-relaxed text-slate-600">
+                Tell us what you need. We will help you plan a suitable
+                system and explain the available options.
               </p>
             </div>
 
-            {formSubmitted ? (
-              <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 sm:p-12 text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
-                  ✓
-                </div>
-                <h3 className="text-2xl font-bold text-[#0A192F]">Application Submitted Successfully!</h3>
-                <p className="text-slate-600 max-w-md mx-auto text-sm">
-                  Your email client has opened to send your application securely. Our hiring team will review it shortly.
-                </p>
-                <div className="pt-4 flex justify-center gap-4">
-                  <button 
-                    onClick={() => { setFormSubmitted(false); setCareerPath(null); }}
-                    className="px-6 py-2.5 bg-[#00B4D8] text-white rounded-xl font-semibold text-sm hover:bg-[#0799ba] transition"
-                  >
-                    Back to Careers
-                  </button>
-                  <button 
-                    onClick={() => { setFormSubmitted(false); setCareerPath(null); setActiveTab('home'); }}
-                    className="px-6 py-2.5 bg-slate-200 text-slate-700 rounded-xl font-semibold text-sm hover:bg-slate-300 transition"
-                  >
-                    Return to Home
-                  </button>
-                </div>
-              </div>
-            ) : careerPath === null ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                <button 
-                  onClick={() => setCareerPath('fresher')}
-                  className="bg-white p-8 rounded-2xl border-2 border-slate-200 hover:border-[#00B4D8] hover:shadow-xl transition-all text-left group flex flex-col justify-between"
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <article
+                  key={service.title}
+                  className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-sky-700 hover:shadow-lg"
                 >
-                  <div>
-                    <div className="w-12 h-12 rounded-xl bg-sky-50 text-[#00B4D8] flex items-center justify-center mb-4 group-hover:bg-[#00B4D8] group-hover:text-white transition-colors">
-                      <GraduationCap className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[#0A192F] mb-2">Apply as Fresher</h3>
-                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                      Just starting out? Tell us about your education background, career goals, and personal mindset.
+                  <div className="overflow-hidden bg-[#070e18]">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="block h-auto w-full"
+                    />
+                  </div>
+
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="mb-3 text-xl font-bold leading-snug text-[#0A192F]">
+                      {service.title}
+                    </h3>
+
+                    <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
+                      {service.desc}
                     </p>
-                  </div>
-                  <div className="mt-8 flex items-center gap-2 text-[#00B4D8] font-semibold text-xs uppercase tracking-wider">
-                    <span>Select Fresher Track</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
 
-                <button 
-                  onClick={() => setCareerPath('experienced')}
-                  className="bg-white p-8 rounded-2xl border-2 border-slate-200 hover:border-[#00B4D8] hover:shadow-xl transition-all text-left group flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-12 h-12 rounded-xl bg-sky-50 text-[#00B4D8] flex items-center justify-center mb-4 group-hover:bg-[#00B4D8] group-hover:text-white transition-colors">
-                      <Briefcase className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[#0A192F] mb-2">Apply with Experience</h3>
-                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                      Experienced professional? Share your technical strengths, track record, and past project experience.
+                    <a
+                      href={whatsappLink(
+                        `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Enquire about ${service.title} on WhatsApp`}
+                      className={`${primaryButton} self-start`}
+                    >
+                      <MessageCircle size={18} aria-hidden="true" />
+                      Enquire on WhatsApp
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* PROJECT CONTACT */}
+        <section className="bg-[#0A192F] py-12 text-white">
+          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
+            <div>
+              <h2 className="mb-3 text-2xl font-bold sm:text-3xl">
+                Planning a new project or upgrading an existing system?
+              </h2>
+              <p className="max-w-2xl leading-relaxed text-slate-300">
+                Share your location and requirements so we can discuss
+                the next steps with you.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={openBooking}
+              className={`${primaryButton} shrink-0`}
+            >
+              Request a Site Visit
+            </button>
+          </div>
+        </section>
+
+        {/* CAREERS */}
+        <section
+          id="careers"
+          className="scroll-mt-24 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-4xl px-5 sm:px-8">
+            <div className="mb-10 text-center">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
+                Join Our Team
+              </p>
+              <h2 className="mb-4 text-3xl font-bold text-[#0A192F]">
+                Build Your Career With Tygrom
+              </h2>
+              <p className="text-slate-600">
+                Share your background, technical interests and
+                experience with our team.
+              </p>
+            </div>
+
+            {!careerPath ? (
+              <div className="grid gap-6 sm:grid-cols-2">
+                {(["fresher", "experienced"] as const).map((path) => (
+                  <button
+                    key={path}
+                    type="button"
+                    onClick={() => {
+                      setCareerPath(path);
+                      setApplicationDraft(null);
+                    }}
+                    className="rounded-2xl border-2 border-slate-200 bg-white p-7 text-left transition hover:border-sky-700 hover:shadow-lg"
+                  >
+                    {path === "fresher" ? (
+                      <GraduationCap
+                        size={32}
+                        className="mb-5 text-sky-700"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Briefcase
+                        size={32}
+                        className="mb-5 text-sky-700"
+                        aria-hidden="true"
+                      />
+                    )}
+
+                    <h3 className="mb-3 text-xl font-bold">
+                      {path === "fresher"
+                        ? "Apply as Fresher"
+                        : "Apply with Experience"}
+                    </h3>
+
+                    <p className="mb-5 leading-relaxed text-slate-600">
+                      {path === "fresher"
+                        ? "Tell us about your education, interests and career goals."
+                        : "Tell us about your technical skills and previous projects."}
                     </p>
-                  </div>
-                  <div className="mt-8 flex items-center gap-2 text-[#00B4D8] font-semibold text-xs uppercase tracking-wider">
-                    <span>Select Experienced Track</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
-              </div>
-            ) : careerPath === 'fresher' ? (
-              /* FRESHER FORM */
-              <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-10">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                  <button 
-                    onClick={() => setCareerPath(null)}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#00B4D8] transition"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Back to selection</span>
+
+                    <span className="inline-flex items-center gap-2 font-semibold text-sky-700">
+                      Start Application
+                      <ChevronRight size={18} aria-hidden="true" />
+                    </span>
                   </button>
-                  <span className="px-3 py-1 bg-sky-50 text-[#00B4D8] rounded-full text-xs font-bold uppercase tracking-wider">
-                    Fresher Application Track
-                  </span>
-                </div>
-
-                <form onSubmit={handleFresherSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Full Name *</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={fresherForm.fullName}
-                        onChange={(e) => setFresherForm({...fresherForm, fullName: e.target.value})}
-                        placeholder="e.g. Rahul Kumar"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Email Address *</label>
-                      <input 
-                        type="email" 
-                        required
-                        value={fresherForm.email}
-                        onChange={(e) => setFresherForm({...fresherForm, email: e.target.value})}
-                        placeholder="name@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Phone / WhatsApp Number *</label>
-                      <input 
-                        type="tel" 
-                        required
-                        value={fresherForm.phone}
-                        onChange={(e) => setFresherForm({...fresherForm, phone: e.target.value})}
-                        placeholder="+91 XXXXXXXXXX"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Education Qualification *</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={fresherForm.education}
-                        onChange={(e) => setFresherForm({...fresherForm, education: e.target.value})}
-                        placeholder="e.g. B.Tech / Diploma in ECE or CSE"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Personality & Career Goals *</label>
-                    <textarea 
-                      rows={4}
-                      required
-                      value={fresherForm.personalityGoal}
-                      onChange={(e) => setFresherForm({...fresherForm, personalityGoal: e.target.value})}
-                      placeholder="Tell us a bit about yourself, why you want to work in ELV/Smart Tech, and your career ambitions..."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 resize-none"
-                    ></textarea>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Resume / CV</label>
-                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-[#00B4D8] bg-slate-50 transition">
-                      <Upload className="w-8 h-8 text-slate-400 mb-2" />
-                      <span className="text-sm font-medium text-slate-600">
-                        {fresherForm.cv ? fresherForm.cv.name : 'Click to upload PDF or DOCX'}
-                      </span>
-                      <input type="file" accept=".pdf,.doc,.docx" onChange={handleFresherFileChange} className="hidden" />
-                    </label>
-                  </div>
-
-                  <button 
-                    type="submit"
-                    className="w-full py-4 bg-[#00B4D8] text-white font-bold rounded-xl hover:bg-[#0799ba] transition shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider text-xs"
-                  >
-                    <Send className="w-4 h-4" />
-                    Submit Application
-                  </button>
-                </form>
+                ))}
               </div>
             ) : (
-              /* EXPERIENCED FORM */
-              <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-10">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                  <button 
-                    onClick={() => setCareerPath(null)}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#00B4D8] transition"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Back to selection</span>
-                  </button>
-                  <span className="px-3 py-1 bg-sky-50 text-[#00B4D8] rounded-full text-xs font-bold uppercase tracking-wider">
-                    Experienced Professional Track
-                  </span>
-                </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCareerPath(null);
+                    setApplicationDraft(null);
+                  }}
+                  className="mb-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sky-700"
+                >
+                  <ArrowLeft size={18} aria-hidden="true" />
+                  Back to selection
+                </button>
 
-                <form onSubmit={handleExpSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Full Name *</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={expForm.fullName}
-                        onChange={(e) => setExpForm({...expForm, fullName: e.target.value})}
-                        placeholder="e.g. Anish V."
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Email Address *</label>
-                      <input 
-                        type="email" 
-                        required
-                        value={expForm.email}
-                        onChange={(e) => setExpForm({...expForm, email: e.target.value})}
-                        placeholder="name@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                  </div>
+                <h3 className="mb-6 text-2xl font-bold">
+                  {careerPath === "fresher"
+                    ? "Fresher Application"
+                    : "Experienced Application"}
+                </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <form
+                  key={careerPath}
+                  onSubmit={handleCareerSubmit}
+                  onChange={() => setApplicationDraft(null)}
+                  className="space-y-5"
+                >
+                  <div className="grid gap-5 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Phone Number *</label>
-                      <input 
-                        type="tel" 
-                        required
-                        value={expForm.phone}
-                        onChange={(e) => setExpForm({...expForm, phone: e.target.value})}
-                        placeholder="+91 XXXXXXXXXX"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Applying For *</label>
-                      <select 
-                        value={expForm.position}
-                        onChange={(e) => setExpForm({...expForm, position: e.target.value})}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                      <label
+                        htmlFor="career-name"
+                        className="mb-2 block text-sm font-semibold"
                       >
-                        <option value="Field Technician / Installer">Field Technician / Installer</option>
-                        <option value="ELV Systems Engineer">ELV Systems Engineer</option>
-                        <option value="Smart Automation Specialist">Smart Automation Specialist</option>
-                        <option value="Project Manager">Project Manager</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Years of Exp. *</label>
-                      <input 
-                        type="text" 
+                        Full Name *
+                      </label>
+                      <input
+                        id="career-name"
+                        name="fullName"
+                        autoComplete="name"
                         required
-                        value={expForm.yearsOfExp}
-                        onChange={(e) => setExpForm({...expForm, yearsOfExp: e.target.value})}
-                        placeholder="e.g. 3 Years"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50"
+                        maxLength={100}
+                        className={inputClass}
                       />
                     </div>
+
+                    <div>
+                      <label
+                        htmlFor="career-email"
+                        className="mb-2 block text-sm font-semibold"
+                      >
+                        Email Address *
+                      </label>
+                      <input
+                        id="career-email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        maxLength={150}
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="career-phone"
+                        className="mb-2 block text-sm font-semibold"
+                      >
+                        Phone / WhatsApp Number *
+                      </label>
+                      <input
+                        id="career-phone"
+                        name="phone"
+                        type="tel"
+                        autoComplete="tel"
+                        required
+                        maxLength={25}
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {careerPath === "fresher" ? (
+                      <div>
+                        <label
+                          htmlFor="career-education"
+                          className="mb-2 block text-sm font-semibold"
+                        >
+                          Education Qualification *
+                        </label>
+                        <input
+                          id="career-education"
+                          name="education"
+                          required
+                          maxLength={200}
+                          className={inputClass}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="career-position"
+                            className="mb-2 block text-sm font-semibold"
+                          >
+                            Applying For *
+                          </label>
+                          <select
+                            id="career-position"
+                            name="position"
+                            className={inputClass}
+                          >
+                            <option>Field Technician / Installer</option>
+                            <option>ELV Systems Engineer</option>
+                            <option>Smart Automation Specialist</option>
+                            <option>Project Manager</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="career-years"
+                            className="mb-2 block text-sm font-semibold"
+                          >
+                            Years of Experience *
+                          </label>
+                          <input
+                            id="career-years"
+                            name="yearsOfExp"
+                            type="number"
+                            min="0"
+                            max="60"
+                            step="0.5"
+                            required
+                            className={inputClass}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Technical Strengths & Past Projects *</label>
-                    <textarea 
-                      rows={4}
-                      required
-                      value={expForm.technicalStrengths}
-                      onChange={(e) => setExpForm({...expForm, technicalStrengths: e.target.value})}
-                      placeholder="Detail your experience with CCTV, Gate Automation, Smart Lighting, Networking, IP-PBX, etc."
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-sm bg-slate-50 resize-none"
-                    ></textarea>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Upload Resume / CV</label>
-                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-[#00B4D8] bg-slate-50 transition">
-                      <Upload className="w-8 h-8 text-slate-400 mb-2" />
-                      <span className="text-sm font-medium text-slate-600">
-                        {expForm.cv ? expForm.cv.name : 'Click to upload PDF or DOCX'}
-                      </span>
-                      <input type="file" accept=".pdf,.doc,.docx" onChange={handleExpFileChange} className="hidden" />
+                    <label
+                      htmlFor="career-details"
+                      className="mb-2 block text-sm font-semibold"
+                    >
+                      {careerPath === "fresher"
+                        ? "Personality & Career Goals *"
+                        : "Technical Strengths & Past Projects *"}
                     </label>
+                    <textarea
+                      id="career-details"
+                      name={
+                        careerPath === "fresher"
+                          ? "personalityGoal"
+                          : "technicalStrengths"
+                      }
+                      rows={5}
+                      required
+                      maxLength={2000}
+                      className={inputClass}
+                    />
                   </div>
 
-                  <button 
+                  <p className="rounded-xl bg-sky-50 p-4 text-sm leading-relaxed text-slate-700">
+                    This form prepares an email draft. Attach your CV
+                    in your email app and send it to {CONTACT.email}.
+                    No application or file is uploaded by this website.
+                  </p>
+
+                  <button
                     type="submit"
-                    className="w-full py-4 bg-[#00B4D8] text-white font-bold rounded-xl hover:bg-[#0799ba] transition shadow-lg flex items-center justify-center gap-2 uppercase tracking-wider text-xs"
+                    className={primaryButton}
                   >
-                    <Send className="w-4 h-4" />
-                    Submit Application
+                    <Send size={18} aria-hidden="true" />
+                    Prepare Application Email
                   </button>
                 </form>
+
+                {applicationDraft && (
+                  <div
+                    role="status"
+                    className="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5"
+                  >
+                    <h4 className="mb-2 font-bold">
+                      Your application draft is ready.
+                    </h4>
+
+                    <p className="mb-4 text-sm leading-relaxed text-slate-700">
+                      Open your email app, attach your CV and press
+                      Send. If no email app opens, copy the draft
+                      below into your preferred email service.
+                    </p>
+
+                    <a
+                      href={draftEmailLink}
+                      className={primaryButton}
+                    >
+                      <Mail size={18} aria-hidden="true" />
+                      Open Email Draft
+                    </a>
+
+                    <p className="mt-4 break-words text-sm">
+                      <strong>To:</strong> {CONTACT.email}
+                    </p>
+                    <p className="mt-2 break-words text-sm">
+                      <strong>Subject:</strong>{" "}
+                      {applicationDraft.subject}
+                    </p>
+
+                    <textarea
+                      aria-label="Application email body to copy"
+                      readOnly
+                      value={applicationDraft.body}
+                      rows={12}
+                      className={`${inputClass} mt-4`}
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>
         </section>
-      )}
+      </main>
 
       {/* FOOTER */}
-      <footer id="contact" className="bg-[#0A192F] text-slate-400 py-12 px-4 sm:px-8 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <footer
+        id="contact"
+        className="scroll-mt-24 bg-[#0A192F] px-5 py-12 text-slate-300 sm:px-8"
+      >
+        <div className="mx-auto grid max-w-7xl gap-9 md:grid-cols-3">
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">Tygrom Integrated Solutions</h3>
-            <p className="text-xs leading-relaxed text-slate-400">
-              Your trusted automation, security, networking, and ELV technology integration partner across Kerala.
+            <h2 className="mb-4 text-xl font-bold text-white">
+              Tygrom Integrated Solutions
+            </h2>
+            <p className="text-sm leading-relaxed">
+              Automation, security, networking and integrated
+              technology solutions for homes and businesses across
+              Kerala.
+            </p>
+            <p className="mt-4 text-sm text-cyan-200">
+              Building Trust, Delivering Excellence.
             </p>
           </div>
+
           <div>
-            <h4 className="text-white font-semibold text-sm mb-3">Quick Contact</h4>
-            <div className="space-y-2 text-xs">
-              <p className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#00B4D8]" />
-                Randathani, Kerala
+            <h3 className="mb-4 font-semibold text-white">
+              Contact Tygrom
+            </h3>
+
+            <div className="space-y-4 text-sm">
+              <p className="flex items-center gap-3">
+                <MapPin size={18} aria-hidden="true" />
+                Randathani, Malappuram, Kerala
               </p>
-              <p className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#00B4D8]" />
-                +91 6235625272
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#00B4D8]" />
-                info@tygrom.in
-              </p>
+
+              <a
+                href={`tel:${CONTACT.phone}`}
+                className="flex items-center gap-3 hover:text-white hover:underline"
+              >
+                <Phone size={18} aria-hidden="true" />
+                {CONTACT.display}
+              </a>
+
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="flex items-center gap-3 hover:text-white hover:underline"
+              >
+                <Mail size={18} aria-hidden="true" />
+                {CONTACT.email}
+              </a>
+
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 hover:text-white hover:underline"
+              >
+                <MessageCircle size={18} aria-hidden="true" />
+                Chat on WhatsApp
+              </a>
             </div>
           </div>
+
           <div>
-            <h4 className="text-white font-semibold text-sm mb-3">Working Hours</h4>
-            <p className="text-xs flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#00B4D8]" />
-              Monday - Saturday: 8:00 AM - 6:00 PM
+            <h3 className="mb-4 font-semibold text-white">
+              Working Hours
+            </h3>
+
+            <p className="flex items-start gap-3 text-sm leading-relaxed">
+              <Clock
+                size={18}
+                className="mt-0.5 shrink-0"
+                aria-hidden="true"
+              />
+              Monday–Saturday
+              <br />
+              8:00 AM–6:00 PM
             </p>
+
+            <button
+              type="button"
+              onClick={openBooking}
+              className="mt-5 min-h-11 rounded-lg border border-slate-500 px-4 py-2 text-sm font-semibold hover:bg-white/10"
+            >
+              Request a Site Visit
+            </button>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} Tygrom Integrated Solutions. All rights reserved.
-        </div>
+
+        <p className="mx-auto mt-10 max-w-7xl border-t border-slate-700 pt-6 text-center text-xs">
+          © {new Date().getFullYear()} Tygrom Integrated Solutions.
+          All rights reserved.
+        </p>
       </footer>
 
-      {/* SITE VISIT MODAL */}
-      {isSiteVisitModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <button 
-              onClick={() => setIsSiteVisitModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-6 h-6" />
-            </button>
+      {/* SITE VISIT DIALOG */}
+      <dialog
+        ref={bookingDialog}
+        aria-labelledby="booking-title"
+        aria-describedby="booking-description"
+        className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-2xl bg-white p-6 text-slate-900 shadow-2xl backdrop:bg-black/60 sm:p-8"
+      >
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <h2
+            id="booking-title"
+            className="text-2xl font-bold text-[#0A192F]"
+          >
+            Book Free Site Visit
+          </h2>
 
-            <h3 className="text-xl font-bold text-[#0A192F] mb-1">Book Free Site Visit</h3>
-            <p className="text-xs text-slate-500 mb-6">Schedule an expert technical inspection for your property.</p>
-
-            <form onSubmit={handleSiteVisitSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Contact Name *</label>
-                <input 
-                  type="text" 
-                  required
-                  value={siteVisitForm.contactPerson}
-                  onChange={(e) => setSiteVisitForm({...siteVisitForm, contactPerson: e.target.value})}
-                  placeholder="Your Name"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Phone *</label>
-                  <input 
-                    type="tel" 
-                    required
-                    value={siteVisitForm.phone}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, phone: e.target.value})}
-                    placeholder="+91 XXXXXXXXXX"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Location *</label>
-                  <input 
-                    type="text" 
-                    required
-                    value={siteVisitForm.location}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, location: e.target.value})}
-                    placeholder="City / Area"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">System Required *</label>
-                <select 
-                  value={siteVisitForm.purpose}
-                  onChange={(e) => setSiteVisitForm({...siteVisitForm, purpose: e.target.value})}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
-                >
-                  {services.map((srv, idx) => (
-                    <option key={idx} value={srv.title}>{srv.title}</option>
-                  ))}
-                  <option value="Complete ELV Package">Complete ELV & Smart Package</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Preferred Date</label>
-                  <input 
-                    type="date" 
-                    value={siteVisitForm.preferredDate}
-                    onChange={(e) => setSiteVisitForm({...siteVisitForm, preferredDate: e.target.value})}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:border-[#00B4D8] focus:outline-none text-xs bg-slate-50"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Preferred Time</label>
-                  <div className="flex gap-1">
-                    <select 
-                      value={siteVisitForm.timeHour}
-                      onChange={(e) => setSiteVisitForm({...siteVisitForm, timeHour: e.target.value})}
-                      className="w-full px-2 py-2.5 rounded-lg border border-slate-200 text-xs bg-slate-50"
-                    >
-                      {['08','09','10','11','12','01','02','03','04','05'].map(h => <option key={h} value={h}>{h}</option>)}
-                    </select>
-                    <select 
-                      value={siteVisitForm.timePeriod}
-                      onChange={(e) => setSiteVisitForm({...siteVisitForm, timePeriod: e.target.value})}
-                      className="px-2 py-2.5 rounded-lg border border-slate-200 text-xs bg-slate-50"
-                    >
-                      <option value="AM">AM</option>
-                      <option value="PM">PM</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <button 
-                type="submit"
-                className="w-full py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition shadow-md text-xs uppercase tracking-wider mt-2"
-              >
-                Request Booking via WhatsApp
-              </button>
-            </form>
-          </div>
+          <button
+            type="button"
+            onClick={() => bookingDialog.current?.close()}
+            aria-label="Close booking form"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg hover:bg-slate-100"
+          >
+            <X aria-hidden="true" />
+          </button>
         </div>
-      )}
 
+        <p
+          id="booking-description"
+          className="mb-6 text-sm leading-relaxed text-slate-600"
+        >
+          Share your requirements and preferred schedule.
+          Our team will confirm availability and booking details.
+        </p>
+
+        <form
+          onSubmit={handleSiteVisitSubmit}
+          className="space-y-5"
+        >
+          <div>
+            <label
+              htmlFor="visit-name"
+              className="mb-2 block text-sm font-semibold"
+            >
+              Contact Name *
+            </label>
+            <input
+              id="visit-name"
+              name="contactPerson"
+              autoComplete="name"
+              required
+              maxLength={100}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="visit-phone"
+                className="mb-2 block text-sm font-semibold"
+              >
+                Phone *
+              </label>
+              <input
+                id="visit-phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                required
+                maxLength={25}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="visit-location"
+                className="mb-2 block text-sm font-semibold"
+              >
+                Site Location *
+              </label>
+              <input
+                id="visit-location"
+                name="location"
+                placeholder="City / Area"
+                required
+                maxLength={200}
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="visit-purpose"
+              className="mb-2 block text-sm font-semibold"
+            >
+              System Required *
+            </label>
+            <select
+              id="visit-purpose"
+              name="purpose"
+              className={inputClass}
+            >
+              {services.map((service) => (
+                <option key={service.title}>
+                  {service.title}
+                </option>
+              ))}
+              <option>Complete ELV & Smart Package</option>
+            </select>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="visit-date"
+                className="mb-2 block text-sm font-semibold"
+              >
+                Preferred Date
+              </label>
+              <input
+                id="visit-date"
+                name="preferredDate"
+                type="date"
+                min={localDate()}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="visit-time"
+                className="mb-2 block text-sm font-semibold"
+              >
+                Preferred Time
+              </label>
+              <input
+                id="visit-time"
+                name="preferredTime"
+                type="time"
+                min="08:00"
+                max="18:00"
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          <p className="text-sm leading-relaxed text-slate-600">
+            Continuing opens WhatsApp with your details. Press Send
+            in WhatsApp to submit your request. Your preferred
+            schedule is subject to confirmation.
+          </p>
+
+          <button
+            type="submit"
+            className={`${primaryButton} w-full`}
+          >
+            <MessageCircle size={18} aria-hidden="true" />
+            Continue to WhatsApp
+          </button>
+
+          <a
+            href={whatsappLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block py-2 text-center text-sm font-semibold text-sky-700 underline"
+          >
+            If WhatsApp does not open, contact us here
+          </a>
+        </form>
+      </dialog>
     </div>
   );
 }
