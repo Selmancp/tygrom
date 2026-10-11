@@ -522,7 +522,15 @@ export default function Home() {
                     <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
                       {service.desc}
                     </p>
-
+{service.title === "Smart Home Automation" && (
+  <a
+    href="/home-automation"
+    className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
+  >
+    View Home Automation Details
+    <ChevronRight size={18} aria-hidden="true" />
+  </a>
+)}
                     <a
                       href={whatsappLink(
                         `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
