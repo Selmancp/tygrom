@@ -1112,14 +1112,7 @@ export default function Home() {
             Continue to WhatsApp
           </button>
 
-          <a
-            href={whatsappLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block py-2 text-center text-sm font-semibold text-sky-700 underline"
-          >
-            If WhatsApp does not open, contact us here
-          </a>
+         
         </form>
       </dialog>
     </div>
