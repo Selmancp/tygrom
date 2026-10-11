@@ -41,61 +41,73 @@ const services = [
     title: "Smart Home Automation",
     desc: "Control lighting, climate, curtains and everyday scenes through your phone or compatible voice assistant.",
     image: "/smart-home.png",
+    href: "/home-automation",
   },
   {
     title: "Smart Office Automation",
     desc: "Connect office lighting, meeting-room technology and energy controls for more convenient daily operation.",
     image: "/smart-office.png",
+    href: "/office-automation",
   },
   {
     title: "CCTV & Security Systems",
     desc: "Video surveillance, remote viewing and recording solutions designed around your property and security needs.",
     image: "/cctv-security.png",
+    href: "/cctv-security",
   },
   {
     title: "Access Control & Gate Automation",
     desc: "Biometric attendance, RFID door access and automated sliding or swing gates with suitable safety controls.",
     image: "/access-control.png",
+    href: "/access-control-gate-automation",
   },
   {
     title: "Video Intercom & Video Door Phone Systems",
     desc: "See and speak to visitors, with mobile communication and remote unlocking on compatible systems.",
     image: "/video-intercom.png",
+    href: "/video-intercom",
   },
   {
     title: "Networking & WiFi Solutions",
     desc: "Reliable Wi-Fi coverage, structured cabling, network racks and connectivity for homes and businesses.",
     image: "/networking.png",
+    href: "/networking-wifi",
   },
   {
     title: "Home Theater & Audio-Video",
     desc: "Home theater, surround sound, multi-room audio and audio-video integration tailored to your space.",
     image: "/home-theater.png",
+    href: "/home-theater",
   },
   {
     title: "Building Automation",
     desc: "Integrated building management and ELV systems for coordinated monitoring and control of commercial spaces.",
     image: "/building-automation.png",
+    href: "/building-automation",
   },
   {
     title: "Smart Swimming Pool",
     desc: "Pool consultation and integration of filtration controls, lighting and compatible monitoring systems.",
     image: "/smart-pool.png",
+    href: "/smart-swimming-pool",
   },
   {
     title: "Electrical & IT Solutions",
     desc: "Electrical installation, power distribution, UPS backup and IT infrastructure support.",
     image: "/electrical-it.png",
+    href: "/electrical-it",
   },
   {
     title: "Digital Signage Solutions",
     desc: "Commercial displays, video walls and centrally managed content for customer-facing spaces.",
     image: "/digital-signage.png",
+    href: "/digital-signage",
   },
   {
     title: "PABX Telephone Systems",
     desc: "IP-PBX systems, telephone extensions and business voice communication configured for your team.",
     image: "/pabx.png",
+    href: "/pabx",
   },
 ];
 
@@ -522,15 +534,14 @@ export default function Home() {
                     <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
                       {service.desc}
                     </p>
-{service.title === "Smart Home Automation" && (
-  <a
-    href="/home-automation"
-    className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
-  >
-    View Home Automation Details
-    <ChevronRight size={18} aria-hidden="true" />
-  </a>
-)}
+<a
+                      href={service.href}
+                      aria-label={`View details about ${service.title}`}
+                      className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
+                    >
+                      View Service Details
+                      <ChevronRight size={18} aria-hidden="true" />
+                    </a>
                     <a
                       href={whatsappLink(
                         `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
@@ -1112,7 +1123,7 @@ export default function Home() {
             Continue to WhatsApp
           </button>
 
-         
+
         </form>
       </dialog>
     </div>

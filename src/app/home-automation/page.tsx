@@ -128,16 +128,8 @@ export default function HomeAutomationPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5">
-          <Link
-            href="/"
-            aria-label="Tygrom Integrated Solutions homepage"
-            className="inline-flex items-center"
-          >
-            <img
-              src="/Logo.jpeg"
-              alt="Tygrom Integrated Solutions"
-              className="block h-auto w-[180px] object-contain sm:w-[220px]"
-            />
+          <Link href="/" aria-label="Tygrom Integrated Solutions homepage" className="inline-flex items-center">
+            <img src="/Logo.jpeg" alt="Tygrom Integrated Solutions" className="block h-auto w-[180px] object-contain sm:w-[220px]" />
           </Link>
 
           <Link
