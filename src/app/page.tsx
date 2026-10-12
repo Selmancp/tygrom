@@ -22,9 +22,9 @@ import {
 } from "lucide-react";
 
 const CONTACT = {
-  display: "+91 6235625272",
-  phone: "+916235625272",
-  whatsapp: "916235625272",
+  display: "+91 9946949924",
+  phone: "+919946949924",
+  whatsapp: "919946949924",
   email: "info@tygrom.in",
 };
 

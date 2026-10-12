@@ -64,7 +64,7 @@ const faqs = [
     "answer": "This depends on available recorder channels, supported camera standards, cabling and power. Share the existing model details for an assessment."
   }
 ];
-const whatsappUrl = "https://wa.me/916235625272?text=" + encodeURIComponent("Hello Tygrom, I would like to enquire about CCTV & Security Systems. My site location is: ");
+const whatsappUrl = "https://wa.me/919946949924?text=" + encodeURIComponent("Hello Tygrom, I would like to enquire about CCTV & Security Systems. My site location is: ");
 
 export default function ServicePage() {
   return (
@@ -90,7 +90,7 @@ export default function ServicePage() {
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-slate-950 hover:bg-emerald-400">
                   <MessageCircle size={20} aria-hidden="true" /> Discuss Your Project
                 </a>
-                <a href="tel:+916235625272" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-500 px-6 py-3 font-semibold hover:bg-white/10">
+                <a href="tel:+919946949924" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-500 px-6 py-3 font-semibold hover:bg-white/10">
                   <Phone size={19} aria-hidden="true" /> Call Tygrom
                 </a>
               </div>
