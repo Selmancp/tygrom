@@ -120,6 +120,241 @@ function localDate() {
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
 }
+const BRAND_LOGOS = [
+  {
+    "name": "KNX",
+    "src": "/brands/knx.png",
+    "width": 46,
+    "height": 22
+  },
+  {
+    "name": "Control4",
+    "src": "/brands/control4.png",
+    "width": 80,
+    "height": 18
+  },
+  {
+    "name": "Tuya",
+    "src": "/brands/tuya.png",
+    "width": 44,
+    "height": 22
+  },
+  {
+    "name": "Smart Life",
+    "src": "/brands/smart-life.png",
+    "width": 22,
+    "height": 22
+  },
+  {
+    "name": "Schneider Electric",
+    "src": "/brands/schneider-electric.png",
+    "width": 75,
+    "height": 22
+  },
+  {
+    "name": "Legrand",
+    "src": "/brands/legrand.png",
+    "width": 80,
+    "height": 20
+  },
+  {
+    "name": "Dahua",
+    "src": "/brands/dahua.png",
+    "width": 74,
+    "height": 22
+  },
+  {
+    "name": "Hikvision",
+    "src": "/brands/hikvision.png",
+    "width": 80,
+    "height": 10
+  },
+  {
+    "name": "ZKTeco",
+    "src": "/brands/zkteco.png",
+    "width": 80,
+    "height": 18
+  },
+  {
+    "name": "BFT",
+    "src": "/brands/bft.png",
+    "width": 26,
+    "height": 22
+  },
+  {
+    "name": "Nice",
+    "src": "/brands/nice.png",
+    "width": 22,
+    "height": 22
+  },
+  {
+    "name": "Comelit",
+    "src": "/brands/comelit.png",
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "Fermax",
+    "src": "/brands/fermax.png",
+    "width": 80,
+    "height": 14
+  },
+  {
+    "name": "TP-Link",
+    "src": "/brands/tp-link.png",
+    "width": 58,
+    "height": 22
+  },
+  {
+    "name": "Ubiquiti",
+    "src": "/brands/ubiquiti.png",
+    "width": 22,
+    "height": 22
+  },
+  {
+    "name": "D-Link",
+    "src": "/brands/d-link.png",
+    "width": 80,
+    "height": 16
+  },
+  {
+    "name": "JBL",
+    "src": "/brands/jbl.png",
+    "width": 32,
+    "height": 22
+  },
+  {
+    "name": "Bosch",
+    "src": "/brands/bosch.png",
+    "width": 80,
+    "height": 18
+  },
+  {
+    "name": "Bose",
+    "src": "/brands/bose.png",
+    "width": 80,
+    "height": 10
+  },
+  {
+    "name": "Yamaha",
+    "src": "/brands/yamaha.png",
+    "width": 56,
+    "height": 22
+  },
+  {
+    "name": "Klipsch",
+    "src": "/brands/klipsch.png",
+    "width": 30,
+    "height": 22
+  },
+  {
+    "name": "Denon",
+    "src": "/brands/denon.png",
+    "width": 80,
+    "height": 16
+  },
+  {
+    "name": "Samsung",
+    "src": "/brands/samsung.png",
+    "width": 80,
+    "height": 12
+  },
+  {
+    "name": "LG",
+    "src": "/brands/lg.png",
+    "width": 50,
+    "height": 22
+  },
+  {
+    "name": "ABB",
+    "src": "/brands/abb.png",
+    "width": 57,
+    "height": 22
+  },
+  {
+    "name": "Grandstream",
+    "src": "/brands/grandstream.png",
+    "width": 80,
+    "height": 12
+  },
+  {
+    "name": "Yeastar",
+    "src": "/brands/yeastar.png",
+    "width": 74,
+    "height": 22
+  },
+  {
+    "name": "AutoCAD",
+    "src": "/brands/autocad.png",
+    "width": 80,
+    "height": 20
+  },
+  {
+    "name": "SketchUp",
+    "src": "/brands/sketchup.png",
+    "width": 80,
+    "height": 18
+  },
+  {
+    "name": "Revit",
+    "src": "/brands/revit.png",
+    "width": 80,
+    "height": 20
+  }
+];
+
+function BrandLogo({ name, src, width, height }: {
+  name: string; src: string; width: number; height: number;
+}) {
+  const [failed, setFailed] = useState(false);
+  const dark = ["Comelit", "Fermax", "Denon", "ZKTeco"].includes(name);
+  return (
+    <div className={`flex h-7 shrink-0 items-center justify-center ${dark ? "rounded-lg bg-slate-900 px-1" : ""}`}>
+      {failed ? (
+        <span style={{ width }} className="text-center text-sm font-semibold text-slate-500">{name}</span>
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={name} width={width} height={height}
+          style={{ width, height }} className="block shrink-0 object-contain"
+          onError={() => setFailed(true)} />
+      )}
+    </div>
+  );
+}
+
+function BrandStrip() {
+  const [paused, setPaused] = useState(false);
+  return (
+    <section aria-label="Brands and technologies we work with" className="relative border-b border-slate-200 bg-white py-1">
+      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused}
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:shadow">
+        {paused ? "Play logo animation" : "Pause logo animation"}
+      </button>
+      <div className="tygrom-brand-window overflow-hidden" tabIndex={0} aria-label="Brand logos; animation pauses while focused">
+        <div className="tygrom-brand-track" style={{ animationPlayState: paused ? "paused" : "running" }}>
+          {[0, 1].map((copy) => (
+            <div key={copy} className="tygrom-brand-group" aria-hidden={copy === 1 ? true : undefined}>
+              {BRAND_LOGOS.map((brand) => <BrandLogo key={brand.name} {...brand} />)}
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        .tygrom-brand-track { display:flex; width:max-content; animation:tygromBrandScroll 100s linear infinite; }
+        .tygrom-brand-group { display:flex; flex-shrink:0; align-items:center; gap:32px; padding-right:32px; }
+        .tygrom-brand-window:hover .tygrom-brand-track,
+        .tygrom-brand-window:focus-within .tygrom-brand-track { animation-play-state:paused !important; }
+        @keyframes tygromBrandScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+        @media (prefers-reduced-motion:reduce) {
+          .tygrom-brand-track { animation:none; }
+          .tygrom-brand-window { overflow-x:auto; }
+          .tygrom-brand-group[aria-hidden="true"] { display:none; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [careerPath, setCareerPath] = useState<
@@ -307,6 +542,7 @@ export default function Home() {
         )}
       </nav>
       <main>
+        <BrandStrip />
         {/* HERO */}
         <section
           id="home"
