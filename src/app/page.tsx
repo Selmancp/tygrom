@@ -547,7 +547,7 @@ export default function Home() {
         {/* HERO */}
         <section
           id="home"
-          className="relative isolate flex scroll-mt-20 items-center overflow-hidden bg-[#0A192F] py-7 sm:min-h-[75svh] sm:scroll-mt-24 sm:py-24"
+          className="relative isolate flex min-h-[calc(100svh-140px)] scroll-mt-20 items-center overflow-hidden bg-[#0A192F] py-7 sm:min-h-[75svh] sm:scroll-mt-24 sm:py-24"
         >
           <picture>
             <source
