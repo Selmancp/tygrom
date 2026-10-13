@@ -1,5 +1,4 @@
 "use client";
-
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import {
@@ -20,14 +19,12 @@ import {
   Info,
   Wrench,
 } from "lucide-react";
-
 const CONTACT = {
   display: "+91 9946949924",
   phone: "+919946949924",
   whatsapp: "919946949924",
   email: "info@tygrom.in",
 };
-
 const navigation = [
   { label: "Home", href: "#home", icon: HomeIcon },
   { label: "About Us", href: "#about", icon: Info },
@@ -35,7 +32,6 @@ const navigation = [
   { label: "Careers", href: "#careers", icon: Briefcase },
   { label: "Contact", href: "#contact", icon: Mail },
 ];
-
 const services = [
   {
     title: "Smart Home Automation",
@@ -110,50 +106,39 @@ const services = [
     href: "/pabx",
   },
 ];
-
 const inputClass =
   "w-full min-w-0 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-900 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700/20";
-
 const primaryButton =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700";
-
 function whatsappLink(message?: string) {
   const base = `https://wa.me/${CONTACT.whatsapp}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
-
 function localDate() {
   const date = new Date();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
 }
-
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [careerPath, setCareerPath] = useState<
     "fresher" | "experienced" | null
   >(null);
-
-  const [applicationDraft, setApplicationDraft] = useState<{
-    subject: string;
-    body: string;
-  } | null>(null);
-
+  const [applicationStatus, setApplicationStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [applicationSubmitting, setApplicationSubmitting] = useState(false);
+  const applicationLock = useRef(false);
+  const submissionId = useRef<string | null>(null);
   const bookingDialog = useRef<HTMLDialogElement>(null);
-
   function openBooking() {
     setMobileMenuOpen(false);
     bookingDialog.current?.showModal();
   }
-
   function handleSiteVisitSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
     const value = (name: string) =>
       String(data.get(name) ?? "").trim();
-
     const message = [
       "*New Site Visit Request — Tygrom*",
       "",
@@ -166,58 +151,46 @@ export default function Home() {
       "",
       "Please confirm availability and booking details.",
     ].join("\n");
-
     window.open(
       whatsappLink(message),
       "_blank",
       "noopener,noreferrer"
     );
   }
-
-  function handleCareerSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleCareerSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const data = new FormData(event.currentTarget);
-    const value = (name: string) =>
-      String(data.get(name) ?? "").trim();
-
-    const experienced = careerPath === "experienced";
-
-    const subject = experienced
-      ? `Experienced Application — ${value("position")} — ${value("fullName")}`
-      : `Fresher Application — ${value("fullName")}`;
-
-    const body = [
-      experienced
-        ? "Experienced Career Application"
-        : "Fresher Career Application",
-      "",
-      `Full name: ${value("fullName")}`,
-      `Email: ${value("email")}`,
-      `Phone: ${value("phone")}`,
-      ...(experienced
-        ? [
-            `Position: ${value("position")}`,
-            `Years of experience: ${value("yearsOfExp")}`,
-            `Technical strengths and projects: ${value("technicalStrengths")}`,
-          ]
-        : [
-            `Education: ${value("education")}`,
-            `Personality and career goals: ${value("personalityGoal")}`,
-          ]),
-      "",
-      "I will attach my CV to this email before sending.",
-    ].join("\n");
-
-    setApplicationDraft({ subject, body });
+    if (applicationLock.current || !careerPath) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const files = data.getAll("documents").filter((item): item is File => item instanceof File && item.size > 0);
+    setApplicationStatus(null);
+    if (files.length > 3 || files.reduce((sum, file) => sum + file.size, 0) > 3 * 1024 * 1024) {
+      setApplicationStatus({ type: "error", message: "Choose up to 3 documents, with a combined size of 3 MB or less." });
+      return;
+    }
+    if (files.some((file) => !/\.(pdf|docx|jpe?g|png)$/i.test(file.name))) {
+      setApplicationStatus({ type: "error", message: "Please upload PDF, DOCX, JPG or PNG files." });
+      return;
+    }
+    applicationLock.current = true;
+    setApplicationSubmitting(true);
+    submissionId.current ??= crypto.randomUUID();
+    data.set("submissionId", submissionId.current);
+    data.set("careerPath", careerPath);
+    try {
+      const response = await fetch("/api/careers", { method: "POST", body: data });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "Unable to submit. Please try again or email info@tygrom.in.");
+      setApplicationStatus({ type: "success", message: "Your application has been submitted. Thank you for your interest in Tygrom." });
+      form.reset();
+      submissionId.current = null;
+    } catch (error) {
+      setApplicationStatus({ type: "error", message: error instanceof Error ? error.message : "Unable to submit. Please try again." });
+    } finally {
+      applicationLock.current = false;
+      setApplicationSubmitting(false);
+    }
   }
-
-  const draftEmailLink = applicationDraft
-    ? `mailto:${CONTACT.email}?subject=${encodeURIComponent(
-        applicationDraft.subject
-      )}&body=${encodeURIComponent(applicationDraft.body)}`
-    : `mailto:${CONTACT.email}`;
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
       {/* CONTACT BAR */}
@@ -233,7 +206,6 @@ export default function Home() {
               Randathani, Kerala
             </span>
           </div>
-
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
             <a
               href={`tel:${CONTACT.phone}`}
@@ -252,7 +224,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       {/* NAVIGATION WITH ICONS */}
       <nav
         aria-label="Main navigation"
@@ -270,7 +241,6 @@ export default function Home() {
               className="h-10 w-auto max-w-32 object-contain sm:h-14 sm:max-w-48"
             />
           </a>
-
           <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
             {navigation.map(({ label, href, icon: Icon }) => (
               <a
@@ -288,7 +258,6 @@ export default function Home() {
               </a>
             ))}
           </div>
-
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -297,7 +266,6 @@ export default function Home() {
             >
               Book Free Site Visit
             </button>
-
             <button
               type="button"
               onClick={() => setMobileMenuOpen((open) => !open)}
@@ -314,7 +282,6 @@ export default function Home() {
             </button>
           </div>
         </div>
-
         {mobileMenuOpen && (
           <div
             id="mobile-navigation"
@@ -339,7 +306,6 @@ export default function Home() {
           </div>
         )}
       </nav>
-
       <main>
         {/* HERO */}
         <section
@@ -358,28 +324,23 @@ export default function Home() {
               className="absolute inset-0 -z-20 h-full w-full object-cover"
             />
           </picture>
-
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/50" />
-
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
               <p className="mb-5 text-sm font-semibold tracking-wide text-cyan-200">
                 Automation · Security · Connectivity
               </p>
-
               <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Smart Technology.
                 <br />
                 Seamlessly Integrated.
               </h1>
-
               <p className="mb-8 max-w-2xl text-base leading-relaxed text-slate-100 sm:text-lg">
                 Smart home automation, security, networking and pool
                 automation for homes and businesses across Kerala.
                 Based in Randathani, Tygrom designs, installs and
                 supports systems tailored to your space.
               </p>
-
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
@@ -389,7 +350,6 @@ export default function Home() {
                   Discuss Your Project
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
-
                 <a
                   href={whatsappLink(
                     "Hello Tygrom, I would like to discuss a project."
@@ -401,7 +361,6 @@ export default function Home() {
                   <MessageCircle size={18} aria-hidden="true" />
                   WhatsApp Us
                 </a>
-
                 <a
                   href="#services"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
@@ -409,14 +368,12 @@ export default function Home() {
                   Explore Services
                 </a>
               </div>
-
               <p className="mt-8 text-sm text-slate-300">
                 Building Trust, Delivering Excellence.
               </p>
             </div>
           </div>
         </section>
-
         {/* ABOUT */}
         <section
           id="about"
@@ -427,11 +384,9 @@ export default function Home() {
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
                 About Tygrom
               </p>
-
               <h2 className="mb-5 text-3xl font-bold leading-tight text-[#0A192F]">
                 Technology designed around your everyday needs.
               </h2>
-
               <p className="mb-6 leading-relaxed text-slate-600">
                 We design, install, integrate and maintain technology
                 for homes, offices and commercial spaces. Our work
@@ -439,7 +394,6 @@ export default function Home() {
                 IT infrastructure into solutions that are practical
                 to operate.
               </p>
-
               <ul className="space-y-4">
                 {[
                   "Solutions planned for your space and requirements",
@@ -457,18 +411,15 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-
             <div className="rounded-2xl bg-[#0A192F] p-7 text-white sm:p-9">
               <h3 className="mb-4 text-2xl font-bold">
                 One coordinated solution.
               </h3>
-
               <p className="mb-6 leading-relaxed text-slate-300">
                 From a single system upgrade to an integrated project,
                 we help you select compatible technology and plan
                 installation around your property.
               </p>
-
               <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
                 <div>
                   <p className="font-semibold text-cyan-200">Homes</p>
@@ -488,7 +439,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* SERVICES */}
         <section
           id="services"
@@ -499,17 +449,14 @@ export default function Home() {
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
                 Our Services
               </p>
-
               <h2 className="mb-4 text-3xl font-bold text-[#0A192F] sm:text-4xl">
                 Integrated solutions for your space.
               </h2>
-
               <p className="leading-relaxed text-slate-600">
                 Tell us what you need. We will help you plan a suitable
                 system and explain the available options.
               </p>
             </div>
-
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
                 <article
@@ -525,12 +472,10 @@ export default function Home() {
                       className="block h-auto w-full"
                     />
                   </div>
-
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="mb-3 text-xl font-bold leading-snug text-[#0A192F]">
                       {service.title}
                     </h3>
-
                     <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
                       {service.desc}
                     </p>
@@ -560,7 +505,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* PROJECT CONTACT */}
         <section className="bg-[#0A192F] py-12 text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
@@ -573,7 +517,6 @@ export default function Home() {
                 the next steps with you.
               </p>
             </div>
-
             <button
               type="button"
               onClick={openBooking}
@@ -583,7 +526,6 @@ export default function Home() {
             </button>
           </div>
         </section>
-
         {/* CAREERS */}
         <section
           id="careers"
@@ -602,7 +544,6 @@ export default function Home() {
                 experience with our team.
               </p>
             </div>
-
             {!careerPath ? (
               <div className="grid gap-6 sm:grid-cols-2">
                 {(["fresher", "experienced"] as const).map((path) => (
@@ -611,7 +552,8 @@ export default function Home() {
                     type="button"
                     onClick={() => {
                       setCareerPath(path);
-                      setApplicationDraft(null);
+                      setApplicationStatus(null);
+                      submissionId.current = null;
                     }}
                     className="rounded-2xl border-2 border-slate-200 bg-white p-7 text-left transition hover:border-sky-700 hover:shadow-lg"
                   >
@@ -628,19 +570,16 @@ export default function Home() {
                         aria-hidden="true"
                       />
                     )}
-
                     <h3 className="mb-3 text-xl font-bold">
                       {path === "fresher"
                         ? "Apply as Fresher"
                         : "Apply with Experience"}
                     </h3>
-
                     <p className="mb-5 leading-relaxed text-slate-600">
                       {path === "fresher"
                         ? "Tell us about your education, interests and career goals."
                         : "Tell us about your technical skills and previous projects."}
                     </p>
-
                     <span className="inline-flex items-center gap-2 font-semibold text-sky-700">
                       Start Application
                       <ChevronRight size={18} aria-hidden="true" />
@@ -652,28 +591,30 @@ export default function Home() {
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
                 <button
                   type="button"
+                  disabled={applicationSubmitting}
                   onClick={() => {
                     setCareerPath(null);
-                    setApplicationDraft(null);
+                    setApplicationStatus(null);
+                      submissionId.current = null;
                   }}
                   className="mb-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sky-700"
                 >
                   <ArrowLeft size={18} aria-hidden="true" />
                   Back to selection
                 </button>
-
                 <h3 className="mb-6 text-2xl font-bold">
                   {careerPath === "fresher"
                     ? "Fresher Application"
                     : "Experienced Application"}
                 </h3>
-
                 <form
                   key={careerPath}
                   onSubmit={handleCareerSubmit}
-                  onChange={() => setApplicationDraft(null)}
+                  encType="multipart/form-data"
+                  onChange={() => { setApplicationStatus(null); submissionId.current = null; }}
                   className="space-y-5"
                 >
+                  <fieldset disabled={applicationSubmitting} className="space-y-5">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div>
                       <label
@@ -691,7 +632,6 @@ export default function Home() {
                         className={inputClass}
                       />
                     </div>
-
                     <div>
                       <label
                         htmlFor="career-email"
@@ -709,7 +649,6 @@ export default function Home() {
                         className={inputClass}
                       />
                     </div>
-
                     <div>
                       <label
                         htmlFor="career-phone"
@@ -727,7 +666,6 @@ export default function Home() {
                         className={inputClass}
                       />
                     </div>
-
                     {careerPath === "fresher" ? (
                       <div>
                         <label
@@ -764,7 +702,6 @@ export default function Home() {
                             <option>Project Manager</option>
                           </select>
                         </div>
-
                         <div>
                           <label
                             htmlFor="career-years"
@@ -786,7 +723,6 @@ export default function Home() {
                       </>
                     )}
                   </div>
-
                   <div>
                     <label
                       htmlFor="career-details"
@@ -809,60 +745,24 @@ export default function Home() {
                       className={inputClass}
                     />
                   </div>
-
-                  <p className="rounded-xl bg-sky-50 p-4 text-sm leading-relaxed text-slate-700">
-                    This form prepares an email draft. Attach your CV
-                    in your email app and send it to {CONTACT.email}.
-                    No application or file is uploaded by this website.
-                  </p>
-
-                  <button
-                    type="submit"
-                    className={primaryButton}
-                  >
+                  <div>
+                    <label htmlFor="career-documents" className="mb-2 block text-sm font-semibold">CV / Relevant Documents</label>
+                    <input id="career-documents" name="documents" type="file" multiple accept=".pdf,.docx,.jpg,.jpeg,.png" aria-describedby="career-documents-help" className={inputClass} />
+                    <p id="career-documents-help" className="mt-2 text-xs text-slate-500">Optional: PDF, DOCX, JPG or PNG. Up to 3 files, 3 MB combined.</p>
+                  </div>
+                  <div className="hidden" aria-hidden="true">
+                    <label htmlFor="career-company">Company</label>
+                    <input id="career-company" name="company" tabIndex={-1} autoComplete="off" />
+                  </div>
+                  </fieldset>
+                  <button type="submit" disabled={applicationSubmitting} className={`${primaryButton} disabled:cursor-wait disabled:opacity-60`}>
                     <Send size={18} aria-hidden="true" />
-                    Prepare Application Email
+                    {applicationSubmitting ? "Submitting..." : "Submit"}
                   </button>
                 </form>
-
-                {applicationDraft && (
-                  <div
-                    role="status"
-                    className="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5"
-                  >
-                    <h4 className="mb-2 font-bold">
-                      Your application draft is ready.
-                    </h4>
-
-                    <p className="mb-4 text-sm leading-relaxed text-slate-700">
-                      Open your email app, attach your CV and press
-                      Send. If no email app opens, copy the draft
-                      below into your preferred email service.
-                    </p>
-
-                    <a
-                      href={draftEmailLink}
-                      className={primaryButton}
-                    >
-                      <Mail size={18} aria-hidden="true" />
-                      Open Email Draft
-                    </a>
-
-                    <p className="mt-4 break-words text-sm">
-                      <strong>To:</strong> {CONTACT.email}
-                    </p>
-                    <p className="mt-2 break-words text-sm">
-                      <strong>Subject:</strong>{" "}
-                      {applicationDraft.subject}
-                    </p>
-
-                    <textarea
-                      aria-label="Application email body to copy"
-                      readOnly
-                      value={applicationDraft.body}
-                      rows={12}
-                      className={`${inputClass} mt-4`}
-                    />
+                {applicationStatus && (
+                  <div role={applicationStatus.type === "error" ? "alert" : "status"} className={`mt-5 rounded-xl p-4 text-sm ${applicationStatus.type === "success" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+                    {applicationStatus.message}
                   </div>
                 )}
               </div>
@@ -870,7 +770,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
       {/* FOOTER */}
       <footer
         id="contact"
@@ -890,18 +789,15 @@ export default function Home() {
               Building Trust, Delivering Excellence.
             </p>
           </div>
-
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Contact Tygrom
             </h3>
-
             <div className="space-y-4 text-sm">
               <p className="flex items-center gap-3">
                 <MapPin size={18} aria-hidden="true" />
                 Randathani, Malappuram, Kerala
               </p>
-
               <a
                 href={`tel:${CONTACT.phone}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -909,7 +805,6 @@ export default function Home() {
                 <Phone size={18} aria-hidden="true" />
                 {CONTACT.display}
               </a>
-
               <a
                 href={`mailto:${CONTACT.email}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -917,7 +812,6 @@ export default function Home() {
                 <Mail size={18} aria-hidden="true" />
                 {CONTACT.email}
               </a>
-
               <a
                 href={whatsappLink()}
                 target="_blank"
@@ -929,12 +823,10 @@ export default function Home() {
               </a>
             </div>
           </div>
-
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Working Hours
             </h3>
-
             <p className="flex items-start gap-3 text-sm leading-relaxed">
               <Clock
                 size={18}
@@ -945,7 +837,6 @@ export default function Home() {
               <br />
               8:00 AM–6:00 PM
             </p>
-
             <button
               type="button"
               onClick={openBooking}
@@ -955,13 +846,11 @@ export default function Home() {
             </button>
           </div>
         </div>
-
         <p className="mx-auto mt-10 max-w-7xl border-t border-slate-700 pt-6 text-center text-xs">
           © {new Date().getFullYear()} Tygrom Integrated Solutions.
           All rights reserved.
         </p>
       </footer>
-
       {/* SITE VISIT DIALOG */}
       <dialog
         ref={bookingDialog}
@@ -976,7 +865,6 @@ export default function Home() {
           >
             Book Free Site Visit
           </h2>
-
           <button
             type="button"
             onClick={() => bookingDialog.current?.close()}
@@ -986,7 +874,6 @@ export default function Home() {
             <X aria-hidden="true" />
           </button>
         </div>
-
         <p
           id="booking-description"
           className="mb-6 text-sm leading-relaxed text-slate-600"
@@ -994,7 +881,6 @@ export default function Home() {
           Share your requirements and preferred schedule.
           Our team will confirm availability and booking details.
         </p>
-
         <form
           onSubmit={handleSiteVisitSubmit}
           className="space-y-5"
@@ -1015,7 +901,6 @@ export default function Home() {
               className={inputClass}
             />
           </div>
-
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1034,7 +919,6 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
-
             <div>
               <label
                 htmlFor="visit-location"
@@ -1052,7 +936,6 @@ export default function Home() {
               />
             </div>
           </div>
-
           <div>
             <label
               htmlFor="visit-purpose"
@@ -1073,7 +956,6 @@ export default function Home() {
               <option>Complete ELV & Smart Package</option>
             </select>
           </div>
-
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1090,7 +972,6 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
-
             <div>
               <label
                 htmlFor="visit-time"
@@ -1108,13 +989,11 @@ export default function Home() {
               />
             </div>
           </div>
-
           <p className="text-sm leading-relaxed text-slate-600">
             Continuing opens WhatsApp with your details. Press Send
             in WhatsApp to submit your request. Your preferred
             schedule is subject to confirmation.
           </p>
-
           <button
             type="submit"
             className={`${primaryButton} w-full`}
@@ -1122,8 +1001,6 @@ export default function Home() {
             <MessageCircle size={18} aria-hidden="true" />
             Continue to WhatsApp
           </button>
-
-
         </form>
       </dialog>
     </div>
