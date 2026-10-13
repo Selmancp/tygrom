@@ -429,9 +429,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
       {/* CONTACT BAR */}
-      <div className="bg-[#0A192F] px-4 py-3 text-xs text-slate-200 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-between">
-          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+      <div className="bg-[#0A192F] px-3 py-1.5 text-[11px] text-slate-200 sm:px-8 sm:py-3 sm:text-xs">
+        <div className="mx-auto flex max-w-7xl items-center justify-center sm:flex-wrap sm:justify-between sm:gap-x-6 sm:gap-y-2">
+          <div className="hidden flex-wrap justify-center gap-x-5 gap-y-2 sm:flex">
             <span className="inline-flex items-center gap-2">
               <Clock size={15} aria-hidden="true" />
               Mon–Sat: 8:00 AM–6:00 PM
@@ -441,17 +441,17 @@ export default function Home() {
               Randathani, Kerala
             </span>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+          <div className="flex items-center justify-center gap-x-4 whitespace-nowrap sm:flex-wrap sm:gap-x-5 sm:gap-y-2">
             <a
               href={`tel:${CONTACT.phone}`}
-              className="inline-flex items-center gap-2 hover:underline"
+              className="inline-flex min-h-7 items-center gap-1.5 hover:underline"
             >
               <Phone size={15} aria-hidden="true" />
               {CONTACT.display}
             </a>
             <a
               href={`mailto:${CONTACT.email}`}
-              className="inline-flex items-center gap-2 hover:underline"
+              className="inline-flex min-h-7 items-center gap-1.5 hover:underline"
             >
               <Mail size={15} aria-hidden="true" />
               {CONTACT.email}
@@ -464,7 +464,7 @@ export default function Home() {
         aria-label="Main navigation"
         className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md"
       >
-        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-2 px-3 sm:px-8">
+        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-1 px-3 sm:min-h-20 sm:gap-2 sm:px-8">
           <a
             href="#home"
             onClick={() => setMobileMenuOpen(false)}
@@ -473,7 +473,7 @@ export default function Home() {
             <img
               src="/Logo.jpeg"
               alt="Tygrom Integrated Solutions — Home"
-              className="h-10 w-auto max-w-32 object-contain sm:h-14 sm:max-w-48"
+              className="h-11 w-auto max-w-32 object-contain min-[380px]:max-w-36 sm:h-14 sm:max-w-48"
             />
           </a>
           <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
@@ -497,9 +497,10 @@ export default function Home() {
             <button
               type="button"
               onClick={openBooking}
-              className="min-h-11 rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-700 sm:px-5 sm:text-sm"
+              className="inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-red-600 px-3 py-0 text-xs font-semibold leading-none text-white hover:bg-red-700 sm:h-11 sm:px-5 sm:py-2 sm:text-sm"
             >
-              Book Free Site Visit
+              <span className="sm:hidden">Book Site Visit</span>
+              <span className="hidden sm:inline">Book Free Site Visit</span>
             </button>
             <button
               type="button"
@@ -546,7 +547,7 @@ export default function Home() {
         {/* HERO */}
         <section
           id="home"
-          className="relative isolate flex min-h-[75svh] scroll-mt-24 items-center overflow-hidden bg-[#0A192F] py-16 sm:py-24"
+          className="relative isolate flex scroll-mt-20 items-center overflow-hidden bg-[#0A192F] py-7 sm:min-h-[75svh] sm:scroll-mt-24 sm:py-24"
         >
           <picture>
             <source
@@ -563,25 +564,33 @@ export default function Home() {
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/50" />
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
-              <p className="mb-5 text-sm font-semibold tracking-wide text-cyan-200">
+              <p className="mb-3 text-xs font-semibold tracking-wide text-cyan-200 sm:mb-5 sm:text-sm">
                 Automation · Security · Connectivity
               </p>
-              <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mb-4 text-[clamp(1.75rem,8vw,2.125rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-5xl lg:text-6xl">
                 Smart Technology.
                 <br />
                 Seamlessly Integrated.
               </h1>
-              <p className="mb-8 max-w-2xl text-base leading-relaxed text-slate-100 sm:text-lg">
+              <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
+                Smart automation, security, networking and pool solutions
+                for homes and businesses across Kerala.
+              </p>
+              <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:hidden">
+                <MapPin size={16} aria-hidden="true" />
+                Randathani, Malappuram
+              </p>
+              <p className="mb-8 hidden max-w-2xl text-base leading-relaxed text-slate-100 sm:block sm:text-lg">
                 Smart home automation, security, networking and pool
                 automation for homes and businesses across Kerala.
                 Based in Randathani, Tygrom designs, installs and
                 supports systems tailored to your space.
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button
                   type="button"
                   onClick={openBooking}
-                  className={primaryButton}
+                  className={`${primaryButton} col-span-2 w-full sm:w-auto`}
                 >
                   Discuss Your Project
                   <ChevronRight size={18} aria-hidden="true" />
@@ -592,19 +601,19 @@ export default function Home() {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white hover:bg-green-800"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-green-700 px-2 py-3 text-xs sm:px-5 sm:text-sm font-semibold text-white hover:bg-green-800"
                 >
                   <MessageCircle size={18} aria-hidden="true" />
                   WhatsApp Us
                 </a>
                 <a
                   href="#services"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-2 py-3 text-xs sm:px-5 sm:text-sm font-semibold text-white hover:bg-white/10"
                 >
                   Explore Services
                 </a>
               </div>
-              <p className="mt-8 text-sm text-slate-300">
+              <p className="mt-5 text-xs text-slate-300 sm:mt-8 sm:text-sm">
                 Building Trust, Delivering Excellence.
               </p>
             </div>
