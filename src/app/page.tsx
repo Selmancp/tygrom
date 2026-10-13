@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import {
   Phone,
@@ -34,72 +34,84 @@ const navigation = [
 ];
 const services = [
   {
+    gridLabel: "Home Automation",
     title: "Smart Home Automation",
     desc: "Control lighting, climate, curtains and everyday scenes through your phone or compatible voice assistant.",
     image: "/smart-home.png",
     href: "/home-automation",
   },
   {
+    gridLabel: "Office Automation",
     title: "Smart Office Automation",
     desc: "Connect office lighting, meeting-room technology and energy controls for more convenient daily operation.",
     image: "/smart-office.png",
     href: "/office-automation",
   },
   {
+    gridLabel: "CCTV Security",
     title: "CCTV & Security Systems",
     desc: "Video surveillance, remote viewing and recording solutions designed around your property and security needs.",
     image: "/cctv-security.png",
     href: "/cctv-security",
   },
   {
+    gridLabel: "Access & Gates",
     title: "Access Control & Gate Automation",
     desc: "Biometric attendance, RFID door access and automated sliding or swing gates with suitable safety controls.",
     image: "/access-control.png",
     href: "/access-control-gate-automation",
   },
   {
+    gridLabel: "Video Intercom",
     title: "Video Intercom & Video Door Phone Systems",
     desc: "See and speak to visitors, with mobile communication and remote unlocking on compatible systems.",
     image: "/video-intercom.png",
     href: "/video-intercom",
   },
   {
+    gridLabel: "Networking",
     title: "Networking & WiFi Solutions",
     desc: "Reliable Wi-Fi coverage, structured cabling, network racks and connectivity for homes and businesses.",
     image: "/networking.png",
     href: "/networking-wifi",
   },
   {
+    gridLabel: "Home Theater",
     title: "Home Theater & Audio-Video",
     desc: "Home theater, surround sound, multi-room audio and audio-video integration tailored to your space.",
     image: "/home-theater.png",
     href: "/home-theater",
   },
   {
+    gridLabel: "Building Automation",
     title: "Building Automation",
     desc: "Integrated building management and ELV systems for coordinated monitoring and control of commercial spaces.",
     image: "/building-automation.png",
     href: "/building-automation",
   },
   {
+    gridLabel: "Smart Pools",
     title: "Smart Swimming Pool",
     desc: "Pool consultation and integration of filtration controls, lighting and compatible monitoring systems.",
     image: "/smart-pool.png",
     href: "/smart-swimming-pool",
   },
   {
+    gridLabel: "Electrical & IT",
     title: "Electrical & IT Solutions",
     desc: "Electrical installation, power distribution, UPS backup and IT infrastructure support.",
     image: "/electrical-it.png",
     href: "/electrical-it",
   },
   {
+    gridLabel: "Digital Signage",
     title: "Digital Signage Solutions",
     desc: "Commercial displays, video walls and centrally managed content for customer-facing spaces.",
     image: "/digital-signage.png",
     href: "/digital-signage",
   },
   {
+    gridLabel: "PABX Systems",
     title: "PABX Telephone Systems",
     desc: "IP-PBX systems, telephone extensions and business voice communication configured for your team.",
     image: "/pabx.png",
@@ -355,6 +367,52 @@ function BrandStrip() {
   );
 }
 
+function ServiceCard({ service }: { service: (typeof services)[number] }) {
+  return (
+                <article
+                  className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-sky-700 hover:shadow-lg"
+                >
+                  <div className="overflow-hidden bg-[#070e18]">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="block h-auto w-full"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="mb-3 text-xl font-bold leading-snug text-[#0A192F]">
+                      {service.title}
+                    </h3>
+                    <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
+                      {service.desc}
+                    </p>
+<a
+                      href={service.href}
+                      aria-label={`View details about ${service.title}`}
+                      className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
+                    >
+                      View Service Details
+                      <ChevronRight size={18} aria-hidden="true" />
+                    </a>
+                    <a
+                      href={whatsappLink(
+                        `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Enquire about ${service.title} on WhatsApp`}
+                      className={`${primaryButton} self-start`}
+                    >
+                      <MessageCircle size={18} aria-hidden="true" />
+                      Enquire on WhatsApp
+                    </a>
+                  </div>
+                </article>
+  );
+}
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [careerPath, setCareerPath] = useState<
@@ -364,6 +422,18 @@ export default function Home() {
   const [applicationSubmitting, setApplicationSubmitting] = useState(false);
   const applicationLock = useRef(false);
   const submissionId = useRef<string | null>(null);
+  const serviceDialog = useRef<HTMLDialogElement>(null);
+  const [selectedService, setSelectedService] = useState<(typeof services)[number] | null>(null);
+  useEffect(() => {
+    if (!selectedService) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [selectedService]);
+  function openService(service: (typeof services)[number]) {
+    setSelectedService(service);
+    serviceDialog.current?.showModal();
+  }
   const bookingDialog = useRef<HTMLDialogElement>(null);
   function openBooking() {
     setMobileMenuOpen(false);
@@ -622,17 +692,17 @@ export default function Home() {
         {/* ABOUT */}
         <section
           id="about"
-          className="scroll-mt-24 border-b border-slate-200 bg-white py-16 sm:py-20"
+          className="scroll-mt-24 border-b border-slate-200 bg-white py-10 sm:py-14 lg:py-20"
         >
-          <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-2">
+          <div className="mx-auto grid max-w-7xl items-start gap-6 px-4 sm:gap-8 sm:px-8 lg:grid-cols-2">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
                 About Tygrom
               </p>
-              <h2 className="mb-5 text-3xl font-bold leading-tight text-[#0A192F]">
+              <h2 className="mb-3 text-xl font-bold sm:text-2xl leading-tight sm:text-3xl text-[#0A192F]">
                 Technology designed around your everyday needs.
               </h2>
-              <p className="mb-6 leading-relaxed text-slate-600">
+              <p className="mb-5 text-sm leading-relaxed text-slate-600 sm:text-base">
                 We design, install, integrate and maintain technology
                 for homes, offices and commercial spaces. Our work
                 connects automation, security, electrical systems and
@@ -645,7 +715,7 @@ export default function Home() {
                   "Professional installation and structured cabling",
                   "System setup, user guidance and technical support",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
+                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed sm:text-base">
                     <CheckCircle2
                       size={21}
                       className="mt-0.5 shrink-0 text-sky-700"
@@ -656,11 +726,11 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl bg-[#0A192F] p-7 text-white sm:p-9">
+            <div className="rounded-2xl bg-[#0A192F] p-5 text-white sm:p-7 lg:p-9">
               <h3 className="mb-4 text-2xl font-bold">
                 One coordinated solution.
               </h3>
-              <p className="mb-6 leading-relaxed text-slate-300">
+              <p className="mb-5 text-sm leading-relaxed text-slate-300 sm:text-base">
                 From a single system upgrade to an integrated project,
                 we help you select compatible technology and plan
                 installation around your property.
@@ -687,69 +757,53 @@ export default function Home() {
         {/* SERVICES */}
         <section
           id="services"
-          className="scroll-mt-24 py-16 sm:py-20"
+          className="scroll-mt-24 py-7 sm:py-12 lg:py-16"
         >
-          <div className="mx-auto max-w-7xl px-5 sm:px-8">
-            <div className="mx-auto mb-10 max-w-2xl text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
+          <div className="mx-auto max-w-7xl px-3 sm:px-8">
+            <div className="mx-auto mb-4 max-w-2xl text-center sm:mb-8">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Our Services
               </p>
-              <h2 className="mb-4 text-3xl font-bold text-[#0A192F] sm:text-4xl">
-                Integrated solutions for your space.
+              <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-4xl">
+                Smart Solution for Your Space.
               </h2>
-              <p className="leading-relaxed text-slate-600">
+              <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Tell us what you need. We will help you plan a suitable
                 system and explain the available options.
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service) => (
-                <article
-                  key={service.title}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-sky-700 hover:shadow-lg"
-                >
-                  <div className="overflow-hidden bg-[#070e18]">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="block h-auto w-full"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="mb-3 text-xl font-bold leading-snug text-[#0A192F]">
-                      {service.title}
-                    </h3>
-                    <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
-                      {service.desc}
-                    </p>
-<a
-                      href={service.href}
-                      aria-label={`View details about ${service.title}`}
-                      className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
-                    >
-                      View Service Details
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </a>
-                    <a
-                      href={whatsappLink(
-                        `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Enquire about ${service.title} on WhatsApp`}
-                      className={`${primaryButton} self-start`}
-                    >
-                      <MessageCircle size={18} aria-hidden="true" />
-                      Enquire on WhatsApp
-                    </a>
-                  </div>
-                </article>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:hidden">
+              {services.map((service, index) => (
+                <button key={service.href} type="button" onClick={() => openService(service)}
+                  aria-label={`Open ${service.title}`} aria-haspopup="dialog"
+                  className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white text-center shadow-sm transition hover:border-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
+                  <span role="img" aria-label={service.title} className="block aspect-[4/3] w-full bg-slate-200"
+                    style={{ backgroundImage: "url('/service-grid.png')", backgroundSize: "300% 400%", backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * (100 / 3)}%` }} />
+                  <span className="flex min-h-10 items-center justify-center whitespace-nowrap px-0.5 text-[9px] font-bold text-[#0A192F] min-[380px]:text-[10px] sm:min-h-12 sm:text-sm">
+                    {service.gridLabel}
+                  </span>
+                </button>
               ))}
+            </div>
+            <div className="hidden grid-cols-3 gap-6 lg:grid">
+              {services.map((service) => <ServiceCard key={service.href} service={service} />)}
             </div>
           </div>
         </section>
+        <dialog ref={serviceDialog} aria-label={selectedService?.title ?? "Service details"}
+          onClose={() => setSelectedService(null)}
+          onClick={(event) => {
+            if (event.target !== event.currentTarget) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) serviceDialog.current?.close();
+          }}
+          className="fixed inset-0 m-auto max-h-[85svh] w-[calc(100%_-_24px)] max-w-lg overflow-y-auto rounded-2xl border-0 bg-white p-0 shadow-2xl backdrop:bg-slate-950/70">
+          <button type="button" autoFocus onClick={() => serviceDialog.current?.close()} aria-label="Close service details"
+            className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow focus-visible:outline-2 focus-visible:outline-sky-700">
+            <X size={22} aria-hidden="true" />
+          </button>
+          {selectedService && <ServiceCard service={selectedService} />}
+        </dialog>
         {/* PROJECT CONTACT */}
         <section className="bg-[#0A192F] py-12 text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
@@ -774,23 +828,23 @@ export default function Home() {
         {/* CAREERS */}
         <section
           id="careers"
-          className="scroll-mt-24 py-16 sm:py-20"
+          className="scroll-mt-24 py-8 sm:py-14 lg:py-16"
         >
-          <div className="mx-auto max-w-4xl px-5 sm:px-8">
-            <div className="mb-10 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
+          <div className="mx-auto max-w-4xl px-4 sm:px-8">
+            <div className="mb-6 text-center sm:mb-8">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Join Our Team
               </p>
-              <h2 className="mb-4 text-3xl font-bold text-[#0A192F]">
+              <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-3xl">
                 Build Your Career With Tygrom
               </h2>
-              <p className="text-slate-600">
+              <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Share your background, technical interests and
                 experience with our team.
               </p>
             </div>
             {!careerPath ? (
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-6">
                 {(["fresher", "experienced"] as const).map((path) => (
                   <button
                     key={path}
@@ -800,33 +854,33 @@ export default function Home() {
                       setApplicationStatus(null);
                       submissionId.current = null;
                     }}
-                    className="rounded-2xl border-2 border-slate-200 bg-white p-7 text-left transition hover:border-sky-700 hover:shadow-lg"
+                    className="flex min-h-40 min-w-0 flex-col items-center rounded-2xl border-2 border-slate-200 bg-white p-3 text-center transition hover:border-sky-700 hover:shadow-lg sm:min-h-56 sm:p-7"
                   >
                     {path === "fresher" ? (
                       <GraduationCap
                         size={32}
-                        className="mb-5 text-sky-700"
+                        className="mb-4 text-sky-700"
                         aria-hidden="true"
                       />
                     ) : (
                       <Briefcase
                         size={32}
-                        className="mb-5 text-sky-700"
+                        className="mb-4 text-sky-700"
                         aria-hidden="true"
                       />
                     )}
-                    <h3 className="mb-3 text-xl font-bold">
+                    <h3 className="mb-3 text-base font-bold sm:text-xl">
                       {path === "fresher"
-                        ? "Apply as Fresher"
-                        : "Apply with Experience"}
+                        ? "Fresher"
+                        : "Experienced"}
                     </h3>
-                    <p className="mb-5 leading-relaxed text-slate-600">
+                    <p className="mb-4 flex-1 text-xs leading-relaxed text-slate-600 sm:mb-5 sm:text-base">
                       {path === "fresher"
                         ? "Tell us about your education, interests and career goals."
                         : "Tell us about your technical skills and previous projects."}
                     </p>
-                    <span className="inline-flex items-center gap-2 font-semibold text-sky-700">
-                      Start Application
+                    <span className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg bg-sky-700 px-1 py-2 text-[10px] font-semibold text-white sm:text-sm">
+                      Apply Now
                       <ChevronRight size={18} aria-hidden="true" />
                     </span>
                   </button>
