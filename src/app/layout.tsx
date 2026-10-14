@@ -17,10 +17,55 @@ const geistMono = Geist_Mono({
 const siteUrl = "https://www.tygrom.in";
 
 const siteTitle =
-  "Tygrom Integrated Solutions | Home Automation & Security in Kerala";
+  "Home Automation, CCTV & Security in Malappuram | Tygrom";
 
 const siteDescription =
-  "Smart home automation, CCTV, gate automation, Wi-Fi and smart pool solutions in Kerala. Design, installation and support by Tygrom, Randathani.";
+  "Tygrom plans and installs home automation, CCTV, Wi-Fi, gate automation and smart pool systems for homes and businesses in Malappuram, Kerala.";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Tygrom Integrated Solutions",
+      alternateName: "Tygrom",
+      url: siteUrl,
+      logo: `${siteUrl}/Logo.jpeg`,
+      description:
+        "Engineering-led technology solutions for homes and businesses, including automation, security, networking and smart pool systems.",
+      telephone: "+919946949924",
+      email: "info@tygrom.in",
+      areaServed: ["Randathani", "Malappuram", "Kerala"],
+      knowsAbout: [
+        "Smart home automation",
+        "Smart office automation",
+        "CCTV and security systems",
+        "Gate automation and access control",
+        "Video door phones and intercom systems",
+        "Wi-Fi networking and structured cabling",
+        "Building automation",
+        "Swimming pool automation",
+        "Electrical and IT solutions",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+919946949924",
+        email: "info@tygrom.in",
+        contactType: "customer support",
+        availableLanguage: ["English", "Malayalam"],
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Tygrom Integrated Solutions",
+      publisher: { "@id": `${siteUrl}/#organization` },
+      inLanguage: "en-IN",
+    },
+  ],
+};
 
 const measurementId = "G-HD5ZNX3BYT";
 
@@ -74,6 +119,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         {children}
 
         <Script

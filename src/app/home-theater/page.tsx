@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
-const title = "Home Theater Installation in Malappuram";
-const description = "Home Theater & Audio-Video in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const title = "Home Theatre Installation in Malappuram";
+const description = "Home theatre installation in Malappuram for surround sound, multi-room audio and AV integration. Tygrom plans equipment around your room and budget.";
 export const metadata: Metadata = {
   title,
   description,

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Building Automation Solutions in Malappuram";
-const description = "Building Automation in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Building automation solutions in Malappuram for coordinated controls, monitoring and ELV integration in commercial spaces. Talk to Tygrom in Randathani.";
 export const metadata: Metadata = {
   title,
   description,

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Swimming Pool Automation in Malappuram";
-const description = "Smart Swimming Pool in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Swimming pool automation in Malappuram for compatible filtration controls, pool lighting and monitoring. Tygrom offers consultation and installation planning.";
 export const metadata: Metadata = {
   title,
   description,

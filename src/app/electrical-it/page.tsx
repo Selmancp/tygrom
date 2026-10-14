@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Electrical and IT Solutions in Malappuram";
-const description = "Electrical & IT Solutions in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Electrical and IT solutions in Malappuram, including power distribution, UPS backup and IT infrastructure support for homes and businesses.";
 export const metadata: Metadata = {
   title,
   description,

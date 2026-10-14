@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Video Door Phone Installation in Malappuram";
-const description = "Video Intercom & Video Door Phone Systems in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Video door phone and intercom installation in Malappuram. See visitors, speak through indoor monitors and check compatible gate release options with Tygrom.";
 export const metadata: Metadata = {
   title,
   description,

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Digital Signage Installation in Malappuram";
-const description = "Digital Signage Solutions in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Digital signage installation in Malappuram for commercial displays, video walls and centrally managed content. Plan your display project with Tygrom.";
 export const metadata: Metadata = {
   title,
   description,

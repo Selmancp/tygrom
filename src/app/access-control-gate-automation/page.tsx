@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
-const title = "Gate Automation and Access Control in Malappuram";
-const description = "Access Control & Gate Automation in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const title = "Gate Automation & Access Control in Malappuram";
+const description = "Gate automation and door access control in Malappuram, including sliding gates, RFID entry and biometric attendance. Tygrom plans each installation.";
 export const metadata: Metadata = {
   title,
   description,

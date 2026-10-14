@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "PABX and IP-PBX Installation in Malappuram";
-const description = "PABX Telephone Systems in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "PABX and IP-PBX installation in Malappuram for business extensions, call routing and voice systems. Tygrom assesses your office and connectivity needs.";
 export const metadata: Metadata = {
   title,
   description,

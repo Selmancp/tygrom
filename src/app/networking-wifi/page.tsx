@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
-const title = "WiFi and Network Installation in Malappuram";
-const description = "Networking & WiFi Solutions in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const title = "Wi-Fi Installation & Networking in Malappuram";
+const description = "Wi-Fi installation and network solutions in Malappuram, including access points, structured cabling and business connectivity. Tygrom is based in Randathani.";
 export const metadata: Metadata = {
   title,
   description,

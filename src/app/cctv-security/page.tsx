@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "CCTV Installation in Malappuram";
-const description = "CCTV & Security Systems in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "CCTV installation in Malappuram for homes and businesses, including camera planning, recording and mobile viewing. Contact Tygrom in Randathani.";
 export const metadata: Metadata = {
   title,
   description,

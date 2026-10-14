@@ -10,7 +10,7 @@ import {
 const title = "Smart Home Automation in Malappuram";
 
 const description =
-  "Smart home automation design and installation in Malappuram by Tygrom Integrated Solutions, Randathani. Lighting, curtains, climate control and integrated scenes.";
+  "Smart home automation in Malappuram for lighting, curtains, climate and app control. Tygrom plans and installs compatible systems from Randathani, Kerala.";
 
 export const metadata: Metadata = {
   title,

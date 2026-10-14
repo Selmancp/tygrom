@@ -638,21 +638,21 @@ export default function Home() {
                 Automation · Security · Connectivity
               </p>
               <h1 className="mb-4 text-[clamp(1.75rem,8vw,2.125rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-5xl lg:text-6xl">
-                Smart Technology.
+                Home Automation
                 <br />
-                Seamlessly Integrated.
+                &amp; Security for Kerala
               </h1>
               <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
-                Smart automation, security, networking and pool solutions
-                for homes and businesses across Kerala.
+                Smart home automation, CCTV, networking, gate automation
+                and pool solutions for homes and businesses across Kerala.
               </p>
               <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:hidden">
                 <MapPin size={16} aria-hidden="true" />
                 Randathani, Malappuram
               </p>
               <p className="mb-8 hidden max-w-2xl text-base leading-relaxed text-slate-100 sm:block sm:text-lg">
-                Smart home automation, security, networking and pool
-                automation for homes and businesses across Kerala.
+                Smart home automation, CCTV, networking, gate automation
+                and pool systems for homes and businesses across Kerala.
                 Based in Randathani, Tygrom designs, installs and
                 supports systems tailored to your space.
               </p>

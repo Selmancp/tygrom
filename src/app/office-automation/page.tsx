@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ChevronRight, MessageCircle, Phone } from "lucide-react";
 
 const title = "Smart Office Automation in Malappuram";
-const description = "Smart Office Automation in Malappuram by Tygrom Integrated Solutions, Randathani. Discuss equipment selection, installation and your project requirements.";
+const description = "Smart office automation in Malappuram for lighting, meeting rooms and energy controls. Tygrom assesses your workspace and installs compatible systems.";
 export const metadata: Metadata = {
   title,
   description,
