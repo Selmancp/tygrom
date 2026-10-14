@@ -772,7 +772,7 @@ export default function Home() {
                 system and explain the available options.
               </p>
             </div>
-            <div className="grid grid-cols-4 gap-1.5 sm:gap-4 lg:hidden">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-4 lg:hidden">
               {services.map((service, index) => (
                 <button key={service.href} type="button" onClick={() => openService(service)}
                   aria-label={`Open ${service.title}`} aria-haspopup="dialog"
@@ -785,7 +785,7 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <div className="hidden grid-cols-3 gap-6 lg:grid">
+            <div className="hidden grid-cols-4 gap-6 lg:grid">
               {services.map((service) => <ServiceCard key={service.href} service={service} />)}
             </div>
           </div>
