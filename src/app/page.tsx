@@ -772,14 +772,14 @@ export default function Home() {
                 system and explain the available options.
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:hidden">
+            <div className="grid grid-cols-4 gap-1.5 sm:gap-4 lg:hidden">
               {services.map((service, index) => (
                 <button key={service.href} type="button" onClick={() => openService(service)}
                   aria-label={`Open ${service.title}`} aria-haspopup="dialog"
                   className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white text-center shadow-sm transition hover:border-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
                   <span role="img" aria-label={service.title} className="block aspect-[4/3] w-full bg-slate-200"
                     style={{ backgroundImage: "url('/service-grid.png')", backgroundSize: "300% 400%", backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * (100 / 3)}%` }} />
-                  <span className="flex min-h-10 items-center justify-center whitespace-nowrap px-0.5 text-[9px] font-bold text-[#0A192F] min-[380px]:text-[10px] sm:min-h-12 sm:text-sm">
+                  <span className="flex min-h-11 items-center justify-center px-1 py-1 text-[8px] font-bold leading-tight text-[#0A192F] min-[380px]:text-[9px] sm:min-h-12 sm:text-sm">
                     {service.gridLabel}
                   </span>
                 </button>
