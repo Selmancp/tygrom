@@ -62,8 +62,8 @@ const services = [
     href: "/access-control-gate-automation",
   },
   {
-    gridLabel: "Video Intercom",
-    title: "Video Intercom & Video Door Phone Systems",
+    gridLabel: "Video Door Phone",
+    title: "Video Door Phone & Video Intercom Systems",
     desc: "See and speak to visitors, with mobile communication and remote unlocking on compatible systems.",
     image: "/video-intercom.png",
     href: "/video-intercom",
