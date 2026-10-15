@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import SiteHeader from "@/components/site-header";
+import ServiceBrandMarquee from "@/components/service-brand-marquee";
+import ServiceHeroBackground from "@/components/service-hero-background";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -126,26 +129,13 @@ const whatsappUrl =
 export default function HomeAutomationPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5">
-          <Link href="/" aria-label="Tygrom Integrated Solutions homepage" className="inline-flex items-center">
-            <img src="/Logo.jpeg" alt="Tygrom Integrated Solutions" className="block h-auto w-[180px] object-contain sm:w-[220px]" />
-          </Link>
-
-          <Link
-            href="/#services"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-[#0A192F]"
-          >
-            <ArrowLeft size={18} aria-hidden="true" />
-            All Services
-          </Link>
-        </div>
-      </header>
-
+      <SiteHeader />
+      <ServiceBrandMarquee serviceKey="home-automation" />
       <main>
-        <section className="bg-[#0A192F] px-5 py-16 text-white">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-            <div>
+        <section className="relative isolate flex min-h-[520px] items-center overflow-hidden bg-[#0A192F] px-5 py-16 text-white md:min-h-[40vw] md:max-h-[680px]">
+          <ServiceHeroBackground imageSrc="/smart-home.png" />
+          <div className="relative z-10 mx-auto w-full max-w-6xl">
+            <div className="max-w-3xl">
               <p className="mb-4 text-sm font-semibold tracking-wide text-emerald-300">
                 Randathani · Malappuram · Kerala
               </p>
@@ -180,14 +170,6 @@ export default function HomeAutomationPage() {
                   Call Tygrom
                 </a>
               </div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl bg-[#070e18]">
-              <img
-                src="/smart-home.png"
-                alt="Illustration of smart home automation"
-                className="block h-auto w-full"
-              />
             </div>
           </div>
         </section>
