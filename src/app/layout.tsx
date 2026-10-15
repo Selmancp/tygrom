@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 const siteUrl = "https://www.tygrom.in";
 
 const siteTitle =
-  "Home Automation, CCTV & Security in Malappuram | Tygrom";
+  "Smart Home & Office Automation in Kerala | Tygrom";
 
 const siteDescription =
-  "Tygrom plans and installs home automation, CCTV, Wi-Fi, gate automation and smart pool systems for homes and businesses in Malappuram, Kerala.";
+  "Tygrom provides smart home and office automation, CCTV installation, access control, networking, gate and pool automation across Kerala. Based in Randathani, Malappuram.";
 
 const structuredData = {
   "@context": "https://schema.org",

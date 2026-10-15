@@ -1,4 +1,5 @@
 "use client";
+import SiteHeader from "@/components/site-header";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import {
@@ -9,15 +10,11 @@ import {
   CheckCircle2,
   ChevronRight,
   MessageCircle,
-  Menu,
   X,
   Briefcase,
   GraduationCap,
   ArrowLeft,
   Send,
-  Home as HomeIcon,
-  Info,
-  Wrench,
 } from "lucide-react";
 const CONTACT = {
   display: "+91 9946949924",
@@ -25,13 +22,6 @@ const CONTACT = {
   whatsapp: "919946949924",
   email: "info@tygrom.in",
 };
-const navigation = [
-  { label: "Home", href: "#home", icon: HomeIcon },
-  { label: "About Us", href: "#about", icon: Info },
-  { label: "Services", href: "#services", icon: Wrench },
-  { label: "Careers", href: "#careers", icon: Briefcase },
-  { label: "Contact", href: "#contact", icon: Mail },
-];
 const services = [
   {
     gridLabel: "Home Automation",
@@ -414,7 +404,6 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
 }
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [careerPath, setCareerPath] = useState<
     "fresher" | "experienced" | null
   >(null);
@@ -436,7 +425,6 @@ export default function Home() {
   }
   const bookingDialog = useRef<HTMLDialogElement>(null);
   function openBooking() {
-    setMobileMenuOpen(false);
     bookingDialog.current?.showModal();
   }
   function handleSiteVisitSubmit(event: FormEvent<HTMLFormElement>) {
@@ -498,120 +486,7 @@ export default function Home() {
   }
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
-      {/* CONTACT BAR */}
-      <div className="bg-[#0A192F] px-3 py-1.5 text-[11px] text-slate-200 sm:px-8 sm:py-3 sm:text-xs">
-        <div className="mx-auto flex max-w-7xl items-center justify-center sm:flex-wrap sm:justify-between sm:gap-x-6 sm:gap-y-2">
-          <div className="hidden flex-wrap justify-center gap-x-5 gap-y-2 sm:flex">
-            <span className="inline-flex items-center gap-2">
-              <Clock size={15} aria-hidden="true" />
-              Mon–Sat: 8:00 AM–6:00 PM
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <MapPin size={15} aria-hidden="true" />
-              Randathani, Kerala
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-x-4 whitespace-nowrap sm:flex-wrap sm:gap-x-5 sm:gap-y-2">
-            <a
-              href={`tel:${CONTACT.phone}`}
-              className="inline-flex min-h-7 items-center gap-1.5 hover:underline"
-            >
-              <Phone size={15} aria-hidden="true" />
-              {CONTACT.display}
-            </a>
-            <a
-              href={`mailto:${CONTACT.email}`}
-              className="inline-flex min-h-7 items-center gap-1.5 hover:underline"
-            >
-              <Mail size={15} aria-hidden="true" />
-              {CONTACT.email}
-            </a>
-          </div>
-        </div>
-      </div>
-      {/* NAVIGATION WITH ICONS */}
-      <nav
-        aria-label="Main navigation"
-        className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md"
-      >
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-1 px-3 sm:min-h-20 sm:gap-2 sm:px-8">
-          <a
-            href="#home"
-            onClick={() => setMobileMenuOpen(false)}
-            className="shrink-0"
-          >
-            <img
-              src="/Logo.jpeg"
-              alt="Tygrom Integrated Solutions — Home"
-              className="h-11 w-auto max-w-32 object-contain min-[380px]:max-w-36 sm:h-14 sm:max-w-48"
-            />
-          </a>
-          <div className="hidden items-center gap-6 text-sm font-medium lg:flex">
-            {navigation.map(({ label, href, icon: Icon }) => (
-              <a
-                key={href}
-                href={href}
-                className="inline-flex min-h-11 items-center gap-2 py-3 text-slate-700 transition hover:text-sky-700"
-              >
-                <Icon
-                  size={18}
-                  strokeWidth={2}
-                  className="shrink-0"
-                  aria-hidden="true"
-                />
-                <span>{label}</span>
-              </a>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={openBooking}
-              className="inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-red-600 px-3 py-0 text-xs font-semibold leading-none text-white hover:bg-red-700 sm:h-11 sm:px-5 sm:py-2 sm:text-sm"
-            >
-              <span className="sm:hidden">Book Site Visit</span>
-              <span className="hidden sm:inline">Book Free Site Visit</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((open) => !open)}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-navigation"
-              className="flex h-11 w-11 items-center justify-center rounded-lg hover:bg-slate-100 lg:hidden"
-            >
-              {mobileMenuOpen ? (
-                <X aria-hidden="true" />
-              ) : (
-                <Menu aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </div>
-        {mobileMenuOpen && (
-          <div
-            id="mobile-navigation"
-            className="border-t border-slate-100 bg-white px-5 py-3 shadow-lg lg:hidden"
-          >
-            {navigation.map(({ label, href, icon: Icon }) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-50 hover:text-sky-700"
-              >
-                <Icon
-                  size={20}
-                  strokeWidth={2}
-                  className="shrink-0 text-sky-700"
-                  aria-hidden="true"
-                />
-                <span>{label}</span>
-              </a>
-            ))}
-          </div>
-        )}
-      </nav>
+      <SiteHeader isHome onBookVisit={openBooking} />
       <main>
         <BrandStrip />
         {/* HERO */}
@@ -635,26 +510,28 @@ export default function Home() {
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
               <p className="mb-3 text-xs font-semibold tracking-wide text-cyan-200 sm:mb-5 sm:text-sm">
-                Automation · Security · Connectivity
+                Home &amp; Office Automation · Security · Connectivity
               </p>
               <h1 className="mb-4 text-[clamp(1.75rem,8vw,2.125rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-5xl lg:text-6xl">
-                Home Automation
+                Smart Home &amp; Office Automation,
                 <br />
-                &amp; Security for Kerala
+                CCTV &amp; Security Solutions in Kerala
               </h1>
               <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
-                Smart home automation, CCTV, networking, gate automation
-                and pool solutions for homes and businesses across Kerala.
+                Smart home and office automation, CCTV, access control,
+                networking, gate automation and smart pool solutions for homes
+                and businesses across Kerala.
               </p>
               <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:hidden">
                 <MapPin size={16} aria-hidden="true" />
                 Randathani, Malappuram
               </p>
               <p className="mb-8 hidden max-w-2xl text-base leading-relaxed text-slate-100 sm:block sm:text-lg">
-                Smart home automation, CCTV, networking, gate automation
-                and pool systems for homes and businesses across Kerala.
-                Based in Randathani, Tygrom designs, installs and
-                supports systems tailored to your space.
+                Tygrom Integrated Solutions is an engineering-led technology
+                company based in Randathani, Malappuram. We design, install and
+                support smart home and office automation, CCTV, access control,
+                networking, gate automation and smart pool solutions for homes
+                and businesses across Kerala.
               </p>
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button
