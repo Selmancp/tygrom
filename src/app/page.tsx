@@ -515,7 +515,7 @@ export default function Home() {
               <h1 className="mb-4 text-[clamp(1.5rem,6.4vw,1.5625rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-[34px] lg:text-[42px]">
                 Smart Home &amp; Office Automation,
                 <br />
-                Security Solutions in Kerala
+                Security System Solutions in Kerala
               </h1>
               <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
                 Tygrom Integrated Solutions is a technology and engineering
