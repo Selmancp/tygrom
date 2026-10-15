@@ -512,26 +512,27 @@ export default function Home() {
               <p className="mb-3 text-xs font-semibold tracking-wide text-cyan-200 sm:mb-5 sm:text-sm">
                 Home &amp; Office Automation · Security · Connectivity
               </p>
-              <h1 className="mb-4 text-[clamp(1.75rem,8vw,2.125rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-5xl lg:text-6xl">
+              <h1 className="mb-4 text-[clamp(1.5rem,6.4vw,1.5625rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-[34px] lg:text-[42px]">
                 Smart Home &amp; Office Automation,
                 <br />
-                CCTV &amp; Security Solutions in Kerala
+                Security Solutions in Kerala
               </h1>
               <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
-                Smart home and office automation, CCTV, access control,
-                networking, gate automation and smart pool solutions for homes
-                and businesses across Kerala.
+                Tygrom Integrated Solutions is a technology and engineering
+                company in Randathani, Malappuram. We provide smart home and
+                office automation, CCTV, access control, networking, gate
+                automation and smart swimming pool solutions across Kerala.
               </p>
               <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:hidden">
                 <MapPin size={16} aria-hidden="true" />
                 Randathani, Malappuram
               </p>
               <p className="mb-8 hidden max-w-2xl text-base leading-relaxed text-slate-100 sm:block sm:text-lg">
-                Tygrom Integrated Solutions is an engineering-led technology
-                company based in Randathani, Malappuram. We design, install and
+                Tygrom Integrated Solutions is a technology and engineering
+                company based in Randathani, Malappuram. We design, install, and
                 support smart home and office automation, CCTV, access control,
-                networking, gate automation and smart pool solutions for homes
-                and businesses across Kerala.
+                networking, gate automation, and smart swimming pool solutions
+                for homes and businesses across Kerala.
               </p>
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button

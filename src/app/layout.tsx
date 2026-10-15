@@ -20,7 +20,7 @@ const siteTitle =
   "Smart Home & Office Automation in Kerala | Tygrom";
 
 const siteDescription =
-  "Tygrom provides smart home and office automation, CCTV installation, access control, networking, gate and pool automation across Kerala. Based in Randathani, Malappuram.";
+  "Tygrom Integrated Solutions is a technology and engineering company in Randathani, Malappuram, offering smart home and office automation, CCTV, access control, networking, gate automation and smart swimming pool solutions across Kerala.";
 
 const structuredData = {
   "@context": "https://schema.org",
