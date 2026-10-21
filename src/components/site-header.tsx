@@ -129,7 +129,7 @@ export default function SiteHeader({
             <img
               src="/Logo.jpeg"
               alt="Tygrom Integrated Solutions — Home"
-              className="h-11 w-auto max-w-32 object-contain min-[380px]:max-w-36 sm:h-14 sm:max-w-48"
+              className="tygrom-logo-spin h-11 w-auto max-w-32 object-contain min-[380px]:max-w-36 sm:h-14 sm:max-w-48"
             />
           </a>
 
