@@ -1,6 +1,6 @@
 "use client";
 import SiteHeader from "@/components/site-header";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import {
   Phone,
@@ -357,52 +357,6 @@ function BrandStrip() {
   );
 }
 
-function ServiceCard({ service }: { service: (typeof services)[number] }) {
-  return (
-                <article
-                  className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-sky-700 hover:shadow-lg"
-                >
-                  <div className="overflow-hidden bg-[#070e18]">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="block h-auto w-full"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="mb-3 text-xl font-bold leading-snug text-[#0A192F]">
-                      {service.title}
-                    </h3>
-                    <p className="mb-6 flex-1 text-base leading-relaxed text-slate-600">
-                      {service.desc}
-                    </p>
-<a
-                      href={service.href}
-                      aria-label={`View details about ${service.title}`}
-                      className="mb-4 inline-flex items-center gap-2 self-start font-semibold text-[#0A192F] hover:underline"
-                    >
-                      View Service Details
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </a>
-                    <a
-                      href={whatsappLink(
-                        `Hello Tygrom, I would like to enquire about ${service.title}. Please share the available options.`
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Enquire about ${service.title} on WhatsApp`}
-                      className={`${primaryButton} self-start`}
-                    >
-                      <MessageCircle size={18} aria-hidden="true" />
-                      Enquire on WhatsApp
-                    </a>
-                  </div>
-                </article>
-  );
-}
-
 export default function Home() {
   const [careerPath, setCareerPath] = useState<
     "fresher" | "experienced" | null
@@ -411,18 +365,6 @@ export default function Home() {
   const [applicationSubmitting, setApplicationSubmitting] = useState(false);
   const applicationLock = useRef(false);
   const submissionId = useRef<string | null>(null);
-  const serviceDialog = useRef<HTMLDialogElement>(null);
-  const [selectedService, setSelectedService] = useState<(typeof services)[number] | null>(null);
-  useEffect(() => {
-    if (!selectedService) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previousOverflow; };
-  }, [selectedService]);
-  function openService(service: (typeof services)[number]) {
-    setSelectedService(service);
-    serviceDialog.current?.showModal();
-  }
   const bookingDialog = useRef<HTMLDialogElement>(null);
   function openBooking() {
     bookingDialog.current?.showModal();
@@ -515,24 +457,17 @@ export default function Home() {
               <h1 className="mb-4 text-[clamp(1.5rem,6.4vw,1.5625rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-[34px] lg:text-[42px]">
                 Smart Home &amp; Office Automation,
                 <br />
-                Security System Solutions in Kerala
+                CCTV &amp; Security Systems in Malappuram, Kerala
               </h1>
-              <p className="mb-3 text-sm leading-relaxed text-slate-100 sm:hidden">
+              <p className="mb-3 max-w-2xl text-sm leading-relaxed text-slate-100 sm:mb-5 sm:text-lg">
                 Tygrom Integrated Solutions is a technology and engineering
-                company in Randathani, Malappuram. We provide smart home and
-                office automation, CCTV, access control, networking, gate
-                automation and smart swimming pool solutions across Kerala.
+                company based in Randathani, Malappuram. We design, install and
+                support automation, CCTV, access control, networking, gate and
+                smart pool systems for homes and businesses across Kerala.
               </p>
-              <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:hidden">
+              <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:mb-8 sm:text-sm">
                 <MapPin size={16} aria-hidden="true" />
-                Randathani, Malappuram
-              </p>
-              <p className="mb-8 hidden max-w-2xl text-base leading-relaxed text-slate-100 sm:block sm:text-lg">
-                Tygrom Integrated Solutions is a technology and engineering
-                company based in Randathani, Malappuram. We design, install, and
-                support smart home and office automation, CCTV, access control,
-                networking, gate automation, and smart swimming pool solutions
-                for homes and businesses across Kerala.
+                Based in Randathani, Malappuram · Serving Kerala
               </p>
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button
@@ -578,14 +513,15 @@ export default function Home() {
                 About Tygrom
               </p>
               <h2 className="mb-3 text-xl font-bold sm:text-2xl leading-tight sm:text-3xl text-[#0A192F]">
-                Technology designed around your everyday needs.
+                Electrical engineering expertise, planned around your space.
               </h2>
               <p className="mb-5 text-sm leading-relaxed text-slate-600 sm:text-base">
-                We design, install, integrate and maintain technology
-                for homes, offices and commercial spaces. Our work
-                connects automation, security, electrical systems and
-                IT infrastructure into solutions that are practical
-                to operate.
+                Tygrom is led by Selman Variyath, an electrical engineering
+                professional with hands-on experience in ELV, networking and
+                automation. We design, install, integrate and maintain
+                technology for homes, offices and commercial spaces, with
+                recommendations based on the property, existing systems and
+                project requirements.
               </p>
               <ul className="space-y-4">
                 {[
@@ -651,34 +587,20 @@ export default function Home() {
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-4">
-              {services.map((service, index) => (
-                <button key={service.href} type="button" onClick={() => openService(service)}
-                  aria-label={`Open ${service.title}`} aria-haspopup="dialog"
+                {services.map((service, index) => (
+                <a key={service.href} href={service.href}
+                  aria-label={`View ${service.title} service details`}
                   className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white text-center shadow-sm transition hover:border-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
                   <span role="img" aria-label={service.title} className="block aspect-[4/3] w-full bg-slate-200"
                     style={{ backgroundImage: "url('/service-grid.png')", backgroundSize: "300% 400%", backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * (100 / 3)}%` }} />
                   <span className="flex min-h-11 items-center justify-center px-1 py-1 text-[8px] font-bold leading-tight text-[#0A192F] min-[380px]:text-[9px] sm:min-h-12 sm:text-sm">
                     {service.gridLabel}
                   </span>
-                </button>
+                </a>
               ))}
             </div>
           </div>
         </section>
-        <dialog ref={serviceDialog} aria-label={selectedService?.title ?? "Service details"}
-          onClose={() => setSelectedService(null)}
-          onClick={(event) => {
-            if (event.target !== event.currentTarget) return;
-            const rect = event.currentTarget.getBoundingClientRect();
-            if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) serviceDialog.current?.close();
-          }}
-          className="fixed inset-0 m-auto max-h-[85svh] w-[calc(100%_-_24px)] max-w-lg overflow-y-auto rounded-2xl border-0 bg-white p-0 shadow-2xl backdrop:bg-slate-950/70">
-          <button type="button" autoFocus onClick={() => serviceDialog.current?.close()} aria-label="Close service details"
-            className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow focus-visible:outline-2 focus-visible:outline-sky-700">
-            <X size={22} aria-hidden="true" />
-          </button>
-          {selectedService && <ServiceCard service={selectedService} />}
-        </dialog>
         {/* PROJECT CONTACT */}
         <section className="bg-[#0A192F] py-12 text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
@@ -1037,7 +959,7 @@ export default function Home() {
             id="booking-title"
             className="text-2xl font-bold text-[#0A192F]"
           >
-            Book Free Site Visit
+            Request a Site Visit
           </h2>
           <button
             type="button"

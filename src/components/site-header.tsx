@@ -149,7 +149,7 @@ export default function SiteHeader({
               className="inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-red-600 px-3 py-0 text-xs font-semibold leading-none text-white hover:bg-red-700 sm:h-11 sm:px-5 sm:py-2 sm:text-sm"
             >
               <span className="sm:hidden">Book Site Visit</span>
-              <span className="hidden sm:inline">Book Free Site Visit</span>
+              <span className="hidden sm:inline">Request a Site Visit</span>
             </button>
             <button
               type="button"
@@ -184,7 +184,7 @@ export default function SiteHeader({
           className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-2xl bg-white p-6 text-slate-900 shadow-2xl backdrop:bg-black/60 sm:p-8"
         >
           <div className="mb-3 flex items-start justify-between gap-3">
-            <h2 id="service-booking-title" className="text-2xl font-bold text-[#0A192F]">Book Free Site Visit</h2>
+            <h2 id="service-booking-title" className="text-2xl font-bold text-[#0A192F]">Request a Site Visit</h2>
             <button type="button" onClick={() => bookingDialog.current?.close()} aria-label="Close booking form" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg hover:bg-slate-100">
               <X aria-hidden="true" />
             </button>
