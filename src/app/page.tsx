@@ -1,4 +1,6 @@
 "use client";
+
+import Image from "next/image";
 import SiteHeader from "@/components/site-header";
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
@@ -16,12 +18,14 @@ import {
   ArrowLeft,
   Send,
 } from "lucide-react";
+
 const CONTACT = {
   display: "+91 9946949924",
   phone: "+919946949924",
   whatsapp: "919946949924",
   email: "info@tygrom.in",
 };
+
 const services = [
   {
     gridLabel: "Home Automation",
@@ -108,217 +112,102 @@ const services = [
     href: "/pabx",
   },
 ];
+
 const inputClass =
   "w-full min-w-0 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-900 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700/20";
+
 const primaryButton =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700";
+
 function whatsappLink(message?: string) {
   const base = `https://wa.me/${CONTACT.whatsapp}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
+
 function localDate() {
   const date = new Date();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
+
   return `${date.getFullYear()}-${month}-${day}`;
 }
+
 const BRAND_LOGOS = [
+  { name: "KNX", src: "/brands/knx.png", width: 46, height: 22 },
+  { name: "Control4", src: "/brands/control4.png", width: 80, height: 18 },
+  { name: "Tuya", src: "/brands/tuya.png", width: 44, height: 22 },
+  { name: "Smart Life", src: "/brands/smart-life.png", width: 22, height: 22 },
   {
-    "name": "KNX",
-    "src": "/brands/knx.png",
-    "width": 46,
-    "height": 22
+    name: "Schneider Electric",
+    src: "/brands/schneider-electric.png",
+    width: 75,
+    height: 22,
   },
-  {
-    "name": "Control4",
-    "src": "/brands/control4.png",
-    "width": 80,
-    "height": 18
-  },
-  {
-    "name": "Tuya",
-    "src": "/brands/tuya.png",
-    "width": 44,
-    "height": 22
-  },
-  {
-    "name": "Smart Life",
-    "src": "/brands/smart-life.png",
-    "width": 22,
-    "height": 22
-  },
-  {
-    "name": "Schneider Electric",
-    "src": "/brands/schneider-electric.png",
-    "width": 75,
-    "height": 22
-  },
-  {
-    "name": "Legrand",
-    "src": "/brands/legrand.png",
-    "width": 80,
-    "height": 20
-  },
-  {
-    "name": "Dahua",
-    "src": "/brands/dahua.png",
-    "width": 74,
-    "height": 22
-  },
-  {
-    "name": "Hikvision",
-    "src": "/brands/hikvision.png",
-    "width": 80,
-    "height": 10
-  },
-  {
-    "name": "ZKTeco",
-    "src": "/brands/zkteco.png",
-    "width": 80,
-    "height": 18
-  },
-  {
-    "name": "BFT",
-    "src": "/brands/bft.png",
-    "width": 26,
-    "height": 22
-  },
-  {
-    "name": "Nice",
-    "src": "/brands/nice.png",
-    "width": 22,
-    "height": 22
-  },
-  {
-    "name": "Comelit",
-    "src": "/brands/comelit.png",
-    "width": 80,
-    "height": 8
-  },
-  {
-    "name": "Fermax",
-    "src": "/brands/fermax.png",
-    "width": 80,
-    "height": 14
-  },
-  {
-    "name": "TP-Link",
-    "src": "/brands/tp-link.png",
-    "width": 58,
-    "height": 22
-  },
-  {
-    "name": "Ubiquiti",
-    "src": "/brands/ubiquiti.png",
-    "width": 22,
-    "height": 22
-  },
-  {
-    "name": "D-Link",
-    "src": "/brands/d-link.png",
-    "width": 80,
-    "height": 16
-  },
-  {
-    "name": "JBL",
-    "src": "/brands/jbl.png",
-    "width": 32,
-    "height": 22
-  },
-  {
-    "name": "Bosch",
-    "src": "/brands/bosch.png",
-    "width": 80,
-    "height": 18
-  },
-  {
-    "name": "Bose",
-    "src": "/brands/bose.png",
-    "width": 80,
-    "height": 10
-  },
-  {
-    "name": "Yamaha",
-    "src": "/brands/yamaha.png",
-    "width": 56,
-    "height": 22
-  },
-  {
-    "name": "Klipsch",
-    "src": "/brands/klipsch.png",
-    "width": 30,
-    "height": 22
-  },
-  {
-    "name": "Denon",
-    "src": "/brands/denon.png",
-    "width": 80,
-    "height": 16
-  },
-  {
-    "name": "Samsung",
-    "src": "/brands/samsung.png",
-    "width": 80,
-    "height": 12
-  },
-  {
-    "name": "LG",
-    "src": "/brands/lg.png",
-    "width": 50,
-    "height": 22
-  },
-  {
-    "name": "ABB",
-    "src": "/brands/abb.png",
-    "width": 57,
-    "height": 22
-  },
-  {
-    "name": "Grandstream",
-    "src": "/brands/grandstream.png",
-    "width": 80,
-    "height": 12
-  },
-  {
-    "name": "Yeastar",
-    "src": "/brands/yeastar.png",
-    "width": 74,
-    "height": 22
-  },
-  {
-    "name": "AutoCAD",
-    "src": "/brands/autocad.png",
-    "width": 80,
-    "height": 20
-  },
-  {
-    "name": "SketchUp",
-    "src": "/brands/sketchup.png",
-    "width": 80,
-    "height": 18
-  },
-  {
-    "name": "Revit",
-    "src": "/brands/revit.png",
-    "width": 80,
-    "height": 20
-  }
+  { name: "Legrand", src: "/brands/legrand.png", width: 80, height: 20 },
+  { name: "Dahua", src: "/brands/dahua.png", width: 74, height: 22 },
+  { name: "Hikvision", src: "/brands/hikvision.png", width: 80, height: 10 },
+  { name: "ZKTeco", src: "/brands/zkteco.png", width: 80, height: 18 },
+  { name: "BFT", src: "/brands/bft.png", width: 26, height: 22 },
+  { name: "Nice", src: "/brands/nice.png", width: 22, height: 22 },
+  { name: "Comelit", src: "/brands/comelit.png", width: 80, height: 8 },
+  { name: "Fermax", src: "/brands/fermax.png", width: 80, height: 14 },
+  { name: "TP-Link", src: "/brands/tp-link.png", width: 58, height: 22 },
+  { name: "Ubiquiti", src: "/brands/ubiquiti.png", width: 22, height: 22 },
+  { name: "D-Link", src: "/brands/d-link.png", width: 80, height: 16 },
+  { name: "JBL", src: "/brands/jbl.png", width: 32, height: 22 },
+  { name: "Bosch", src: "/brands/bosch.png", width: 80, height: 18 },
+  { name: "Bose", src: "/brands/bose.png", width: 80, height: 10 },
+  { name: "Yamaha", src: "/brands/yamaha.png", width: 56, height: 22 },
+  { name: "Klipsch", src: "/brands/klipsch.png", width: 30, height: 22 },
+  { name: "Denon", src: "/brands/denon.png", width: 80, height: 16 },
+  { name: "Samsung", src: "/brands/samsung.png", width: 80, height: 12 },
+  { name: "LG", src: "/brands/lg.png", width: 50, height: 22 },
+  { name: "ABB", src: "/brands/abb.png", width: 57, height: 22 },
+  { name: "Grandstream", src: "/brands/grandstream.png", width: 80, height: 12 },
+  { name: "Yeastar", src: "/brands/yeastar.png", width: 74, height: 22 },
+  { name: "AutoCAD", src: "/brands/autocad.png", width: 80, height: 20 },
+  { name: "SketchUp", src: "/brands/sketchup.png", width: 80, height: 18 },
+  { name: "Revit", src: "/brands/revit.png", width: 80, height: 20 },
 ];
 
-function BrandLogo({ name, src, width, height }: {
-  name: string; src: string; width: number; height: number;
+function BrandLogo({
+  name,
+  src,
+  width,
+  height,
+}: {
+  name: string;
+  src: string;
+  width: number;
+  height: number;
 }) {
   const [failed, setFailed] = useState(false);
   const dark = ["Comelit", "Fermax", "Denon", "ZKTeco"].includes(name);
+
   return (
-    <div className={`flex h-7 shrink-0 items-center justify-center ${dark ? "rounded-lg bg-slate-900 px-1" : ""}`}>
+    <div
+      className={`flex h-7 shrink-0 items-center justify-center ${
+        dark ? "rounded-lg bg-slate-900 px-1" : ""
+      }`}
+    >
       {failed ? (
-        <span style={{ width }} className="text-center text-sm font-semibold text-slate-500">{name}</span>
+        <span
+          style={{ width }}
+          className="text-center text-sm font-semibold text-slate-500"
+        >
+          {name}
+        </span>
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={name} width={width} height={height}
-          style={{ width, height }} className="block shrink-0 object-contain"
-          onError={() => setFailed(true)} />
+        <img
+          src={src}
+          alt={name}
+          width={width}
+          height={height}
+          style={{ width, height }}
+          className="block shrink-0 object-contain"
+          onError={() => setFailed(true)}
+        />
       )}
     </div>
   );
@@ -326,33 +215,136 @@ function BrandLogo({ name, src, width, height }: {
 
 function BrandStrip() {
   const [paused, setPaused] = useState(false);
+
   return (
-    <section aria-label="Brands and technologies we work with" className="relative border-b border-slate-200 bg-white py-1">
-      <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused}
-        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:shadow">
+    <section
+      aria-label="Brands and technologies we work with"
+      className="relative border-b border-slate-200 bg-white py-1"
+    >
+      <button
+        type="button"
+        onClick={() => setPaused(!paused)}
+        aria-pressed={paused}
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:shadow"
+      >
         {paused ? "Play logo animation" : "Pause logo animation"}
       </button>
-      <div className="tygrom-brand-window overflow-hidden" tabIndex={0} aria-label="Brand logos; animation pauses while focused">
-        <div className="tygrom-brand-track" style={{ animationPlayState: paused ? "paused" : "running" }}>
+
+      <div
+        className="tygrom-brand-window overflow-hidden"
+        tabIndex={0}
+        aria-label="Brand logos; animation pauses while focused"
+      >
+        <div
+          className="tygrom-brand-track"
+          style={{ animationPlayState: paused ? "paused" : "running" }}
+        >
           {[0, 1].map((copy) => (
-            <div key={copy} className="tygrom-brand-group" aria-hidden={copy === 1 ? true : undefined}>
-              {BRAND_LOGOS.map((brand) => <BrandLogo key={brand.name} {...brand} />)}
+            <div
+              key={copy}
+              className="tygrom-brand-group"
+              aria-hidden={copy === 1 ? true : undefined}
+            >
+              {BRAND_LOGOS.map((brand) => (
+                <BrandLogo key={brand.name} {...brand} />
+              ))}
             </div>
           ))}
         </div>
       </div>
+
       <style>{`
-        .tygrom-brand-track { display:flex; width:max-content; animation:tygromBrandScroll 100s linear infinite; }
-        .tygrom-brand-group { display:flex; flex-shrink:0; align-items:center; gap:32px; padding-right:32px; }
+        .tygrom-brand-track {
+          display: flex;
+          width: max-content;
+          animation: tygromBrandScroll 100s linear infinite;
+        }
+
+        .tygrom-brand-group {
+          display: flex;
+          flex-shrink: 0;
+          align-items: center;
+          gap: 32px;
+          padding-right: 32px;
+        }
+
         .tygrom-brand-window:hover .tygrom-brand-track,
-        .tygrom-brand-window:focus-within .tygrom-brand-track { animation-play-state:paused !important; }
-        @keyframes tygromBrandScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-        @media (prefers-reduced-motion:reduce) {
-          .tygrom-brand-track { animation:none; }
-          .tygrom-brand-window { overflow-x:auto; }
-          .tygrom-brand-group[aria-hidden="true"] { display:none; }
+        .tygrom-brand-window:focus-within .tygrom-brand-track {
+          animation-play-state: paused !important;
+        }
+
+        @keyframes tygromBrandScroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .tygrom-brand-track {
+            animation: none;
+          }
+
+          .tygrom-brand-window {
+            overflow-x: auto;
+          }
+
+          .tygrom-brand-group[aria-hidden="true"] {
+            display: none;
+          }
         }
       `}</style>
+    </section>
+  );
+}
+
+function FounderNote() {
+  return (
+    <section
+      aria-labelledby="founder-note-heading"
+      className="mt-6 border-t border-slate-200 pt-6"
+    >
+      <div className="flex items-center gap-3 sm:gap-4">
+        <Image
+          src="/selman-variyath.jpeg"
+          alt="Selman Variyath"
+          width={64}
+          height={64}
+          sizes="64px"
+          className="h-16 w-16 shrink-0 rounded-full object-cover object-[center_28%]"
+        />
+
+        <div className="min-w-0">
+          <h3
+            id="founder-note-heading"
+            className="text-base font-semibold leading-snug text-[#0A192F] sm:text-lg"
+          >
+            Experience Behind Every Solution
+          </h3>
+
+          <p className="mt-1 text-sm font-medium text-slate-700">
+            Selman Variyath
+          </p>
+
+          <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+            Founder of Tygrom Integrated Solutions &amp;
+            <br />
+            Tygrohm Technical Services L.L.C
+          </p>
+        </div>
+      </div>
+
+      <blockquote className="mt-4 text-sm font-semibold leading-relaxed text-[#0A192F]">
+        “The real value of technology is in how well it works together—and
+        how well it serves you.”
+      </blockquote>
+
+      <p className="mt-3 text-sm leading-relaxed text-slate-600">
+        My experience across electrical, automation, complete ELV systems
+        and system integration has taught me that reliability begins with
+        careful planning. At Tygrom, we consider your space as a whole,
+        explain the choices honestly and bring compatible technologies
+        together with a clear purpose. Your trust is earned through our
+        advice, our work and our support.
+      </p>
     </section>
   );
 }
@@ -361,19 +353,27 @@ export default function Home() {
   const [careerPath, setCareerPath] = useState<
     "fresher" | "experienced" | null
   >(null);
-  const [applicationStatus, setApplicationStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  const [applicationStatus, setApplicationStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
   const [applicationSubmitting, setApplicationSubmitting] = useState(false);
   const applicationLock = useRef(false);
   const submissionId = useRef<string | null>(null);
   const bookingDialog = useRef<HTMLDialogElement>(null);
+
   function openBooking() {
     bookingDialog.current?.showModal();
   }
+
   function handleSiteVisitSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    const value = (name: string) =>
-      String(data.get(name) ?? "").trim();
+    const value = (name: string) => String(data.get(name) ?? "").trim();
+
     const message = [
       "*New Site Visit Request — Tygrom*",
       "",
@@ -386,51 +386,93 @@ export default function Home() {
       "",
       "Please confirm availability and booking details.",
     ].join("\n");
-    window.open(
-      whatsappLink(message),
-      "_blank",
-      "noopener,noreferrer"
-    );
+
+    window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
   }
+
   async function handleCareerSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (applicationLock.current || !careerPath) return;
+
     const form = event.currentTarget;
     const data = new FormData(form);
-    const files = data.getAll("documents").filter((item): item is File => item instanceof File && item.size > 0);
+    const files = data
+      .getAll("documents")
+      .filter((item): item is File => item instanceof File && item.size > 0);
+
     setApplicationStatus(null);
-    if (files.length > 3 || files.reduce((sum, file) => sum + file.size, 0) > 3 * 1024 * 1024) {
-      setApplicationStatus({ type: "error", message: "Choose up to 3 documents, with a combined size of 3 MB or less." });
+
+    if (
+      files.length > 3 ||
+      files.reduce((sum, file) => sum + file.size, 0) > 3 * 1024 * 1024
+    ) {
+      setApplicationStatus({
+        type: "error",
+        message: "Choose up to 3 documents, with a combined size of 3 MB or less.",
+      });
       return;
     }
+
     if (files.some((file) => !/\.(pdf|docx|jpe?g|png)$/i.test(file.name))) {
-      setApplicationStatus({ type: "error", message: "Please upload PDF, DOCX, JPG or PNG files." });
+      setApplicationStatus({
+        type: "error",
+        message: "Please upload PDF, DOCX, JPG or PNG files.",
+      });
       return;
     }
+
     applicationLock.current = true;
     setApplicationSubmitting(true);
     submissionId.current ??= crypto.randomUUID();
+
     data.set("submissionId", submissionId.current);
     data.set("careerPath", careerPath);
+
     try {
-      const response = await fetch("/api/careers", { method: "POST", body: data });
+      const response = await fetch("/api/careers", {
+        method: "POST",
+        body: data,
+      });
+
       const result = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(result?.error || "Unable to submit. Please try again or email info@tygrom.in.");
-      setApplicationStatus({ type: "success", message: "Your application has been submitted. Thank you for your interest in Tygrom." });
+
+      if (!response.ok) {
+        throw new Error(
+          result?.error ||
+            "Unable to submit. Please try again or email info@tygrom.in."
+        );
+      }
+
+      setApplicationStatus({
+        type: "success",
+        message:
+          "Your application has been submitted. Thank you for your interest in Tygrom.",
+      });
+
       form.reset();
       submissionId.current = null;
     } catch (error) {
-      setApplicationStatus({ type: "error", message: error instanceof Error ? error.message : "Unable to submit. Please try again." });
+      setApplicationStatus({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unable to submit. Please try again.",
+      });
     } finally {
       applicationLock.current = false;
       setApplicationSubmitting(false);
     }
   }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
       <SiteHeader isHome onBookVisit={openBooking} />
+
       <main>
         <BrandStrip />
+
         {/* HERO */}
         <section
           id="home"
@@ -448,27 +490,33 @@ export default function Home() {
               className="absolute inset-0 -z-20 h-full w-full object-cover"
             />
           </picture>
+
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/50" />
+
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
               <p className="mb-3 text-xs font-semibold tracking-wide text-cyan-200 sm:mb-5 sm:text-sm">
                 Home &amp; Office Automation · Security · Connectivity
               </p>
+
               <h1 className="mb-4 text-[clamp(1.5rem,6.4vw,1.5625rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-[34px] lg:text-[42px]">
                 Smart Home &amp; Office Automation,
                 <br />
                 CCTV &amp; Security Systems in Malappuram, Kerala
               </h1>
+
               <p className="mb-3 max-w-2xl text-sm leading-relaxed text-slate-100 sm:mb-5 sm:text-lg">
                 Tygrom Integrated Solutions is a technology and engineering
                 company based in Randathani, Malappuram. We design, install and
                 support automation, CCTV, access control, networking, gate and
                 smart pool systems for homes and businesses across Kerala.
               </p>
+
               <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:mb-8 sm:text-sm">
                 <MapPin size={16} aria-hidden="true" />
                 Based in Randathani, Malappuram · Serving Kerala
               </p>
+
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button
                   type="button"
@@ -478,30 +526,34 @@ export default function Home() {
                   Discuss Your Project
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
+
                 <a
                   href={whatsappLink(
                     "Hello Tygrom, I would like to discuss a project."
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-green-700 px-2 py-3 text-xs sm:px-5 sm:text-sm font-semibold text-white hover:bg-green-800"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-green-700 px-2 py-3 text-xs font-semibold text-white hover:bg-green-800 sm:px-5 sm:text-sm"
                 >
                   <MessageCircle size={18} aria-hidden="true" />
                   WhatsApp Us
                 </a>
+
                 <a
                   href="#services"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-2 py-3 text-xs sm:px-5 sm:text-sm font-semibold text-white hover:bg-white/10"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-2 py-3 text-xs font-semibold text-white hover:bg-white/10 sm:px-5 sm:text-sm"
                 >
                   Explore Services
                 </a>
               </div>
+
               <p className="mt-5 text-xs text-slate-300 sm:mt-8 sm:text-sm">
                 Building Trust, Delivering Excellence.
               </p>
             </div>
           </div>
         </section>
+
         {/* ABOUT */}
         <section
           id="about"
@@ -512,9 +564,11 @@ export default function Home() {
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
                 About Tygrom
               </p>
-              <h2 className="mb-3 text-xl font-bold sm:text-2xl leading-tight sm:text-3xl text-[#0A192F]">
+
+              <h2 className="mb-3 text-xl font-bold leading-tight text-[#0A192F] sm:text-3xl">
                 Electrical engineering expertise, planned around your space.
               </h2>
+
               <p className="mb-5 text-sm leading-relaxed text-slate-600 sm:text-base">
                 Tygrom is led by Selman Variyath, an electrical engineering
                 professional with hands-on experience in ELV, networking and
@@ -523,13 +577,17 @@ export default function Home() {
                 recommendations based on the property, existing systems and
                 project requirements.
               </p>
+
               <ul className="space-y-4">
                 {[
                   "Solutions planned for your space and requirements",
                   "Professional installation and structured cabling",
                   "System setup, user guidance and technical support",
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed sm:text-base">
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm leading-relaxed sm:text-base"
+                  >
                     <CheckCircle2
                       size={21}
                       className="mt-0.5 shrink-0 text-sky-700"
@@ -540,34 +598,43 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl bg-[#0A192F] p-5 text-white sm:p-7 lg:p-9">
-              <h3 className="mb-4 text-2xl font-bold">
-                One coordinated solution.
-              </h3>
-              <p className="mb-5 text-sm leading-relaxed text-slate-300 sm:text-base">
-                From a single system upgrade to an integrated project,
-                we help you select compatible technology and plan
-                installation around your property.
-              </p>
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
-                <div>
-                  <p className="font-semibold text-cyan-200">Homes</p>
-                  <p className="mt-1 text-sm text-slate-300">
-                    Comfort and security
-                  </p>
-                </div>
-                <div>
-                  <p className="font-semibold text-cyan-200">
-                    Businesses
-                  </p>
-                  <p className="mt-1 text-sm text-slate-300">
-                    Connected operations
-                  </p>
+
+            <div className="min-w-0">
+              <div className="rounded-2xl bg-[#0A192F] p-5 text-white sm:p-7 lg:p-9">
+                <h3 className="mb-4 text-2xl font-bold">
+                  One coordinated solution.
+                </h3>
+
+                <p className="mb-5 text-sm leading-relaxed text-slate-300 sm:text-base">
+                  From a single system upgrade to an integrated project,
+                  we help you select compatible technology and plan
+                  installation around your property.
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
+                  <div>
+                    <p className="font-semibold text-cyan-200">Homes</p>
+                    <p className="mt-1 text-sm text-slate-300">
+                      Comfort and security
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-cyan-200">
+                      Businesses
+                    </p>
+                    <p className="mt-1 text-sm text-slate-300">
+                      Connected operations
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              <FounderNote />
             </div>
           </div>
         </section>
+
         {/* SERVICES */}
         <section
           id="services"
@@ -578,21 +645,38 @@ export default function Home() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Our Services
               </p>
+
               <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-4xl">
                 Smart Solution for Your Space.
               </h2>
+
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Tell us what you need. We will help you plan a suitable
                 system and explain the available options.
               </p>
             </div>
+
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-4">
-                {services.map((service, index) => (
-                <a key={service.href} href={service.href}
+              {services.map((service, index) => (
+                <a
+                  key={service.href}
+                  href={service.href}
                   aria-label={`View ${service.title} service details`}
-                  className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white text-center shadow-sm transition hover:border-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
-                  <span role="img" aria-label={service.title} className="block aspect-[4/3] w-full bg-slate-200"
-                    style={{ backgroundImage: "url('/service-grid.png')", backgroundSize: "300% 400%", backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * (100 / 3)}%` }} />
+                  className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white text-center shadow-sm transition hover:border-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+                >
+                  <span
+                    role="img"
+                    aria-label={service.title}
+                    className="block aspect-[4/3] w-full bg-slate-200"
+                    style={{
+                      backgroundImage: "url('/service-grid.png')",
+                      backgroundSize: "300% 400%",
+                      backgroundPosition: `${(index % 3) * 50}% ${
+                        Math.floor(index / 3) * (100 / 3)
+                      }%`,
+                    }}
+                  />
+
                   <span className="flex min-h-11 items-center justify-center px-1 py-1 text-[8px] font-bold leading-tight text-[#0A192F] min-[380px]:text-[9px] sm:min-h-12 sm:text-sm">
                     {service.gridLabel}
                   </span>
@@ -601,6 +685,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         {/* PROJECT CONTACT */}
         <section className="bg-[#0A192F] py-12 text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
@@ -608,11 +693,13 @@ export default function Home() {
               <h2 className="mb-3 text-2xl font-bold sm:text-3xl">
                 Planning a new project or upgrading an existing system?
               </h2>
+
               <p className="max-w-2xl leading-relaxed text-slate-300">
                 Share your location and requirements so we can discuss
                 the next steps with you.
               </p>
             </div>
+
             <button
               type="button"
               onClick={openBooking}
@@ -622,6 +709,7 @@ export default function Home() {
             </button>
           </div>
         </section>
+
         {/* CAREERS */}
         <section
           id="careers"
@@ -632,14 +720,17 @@ export default function Home() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Join Our Team
               </p>
+
               <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-3xl">
                 Build Your Career With Tygrom
               </h2>
+
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Share your background, technical interests and
                 experience with our team.
               </p>
             </div>
+
             {!careerPath ? (
               <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-6">
                 {(["fresher", "experienced"] as const).map((path) => (
@@ -666,16 +757,17 @@ export default function Home() {
                         aria-hidden="true"
                       />
                     )}
+
                     <h3 className="mb-3 text-base font-bold sm:text-xl">
-                      {path === "fresher"
-                        ? "Fresher"
-                        : "Experienced"}
+                      {path === "fresher" ? "Fresher" : "Experienced"}
                     </h3>
+
                     <p className="mb-4 flex-1 text-xs leading-relaxed text-slate-600 sm:mb-5 sm:text-base">
                       {path === "fresher"
                         ? "Tell us about your education, interests and career goals."
                         : "Tell us about your technical skills and previous projects."}
                     </p>
+
                     <span className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg bg-sky-700 px-1 py-2 text-[10px] font-semibold text-white sm:text-sm">
                       Apply Now
                       <ChevronRight size={18} aria-hidden="true" />
@@ -691,173 +783,227 @@ export default function Home() {
                   onClick={() => {
                     setCareerPath(null);
                     setApplicationStatus(null);
-                      submissionId.current = null;
+                    submissionId.current = null;
                   }}
                   className="mb-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-sky-700"
                 >
                   <ArrowLeft size={18} aria-hidden="true" />
                   Back to selection
                 </button>
+
                 <h3 className="mb-6 text-2xl font-bold">
                   {careerPath === "fresher"
                     ? "Fresher Application"
                     : "Experienced Application"}
                 </h3>
+
                 <form
                   key={careerPath}
                   onSubmit={handleCareerSubmit}
                   encType="multipart/form-data"
-                  onChange={() => { setApplicationStatus(null); submissionId.current = null; }}
+                  onChange={() => {
+                    setApplicationStatus(null);
+                    submissionId.current = null;
+                  }}
                   className="space-y-5"
                 >
-                  <fieldset disabled={applicationSubmitting} className="space-y-5">
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <div>
-                      <label
-                        htmlFor="career-name"
-                        className="mb-2 block text-sm font-semibold"
-                      >
-                        Full Name *
-                      </label>
-                      <input
-                        id="career-name"
-                        name="fullName"
-                        autoComplete="name"
-                        required
-                        maxLength={100}
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="career-email"
-                        className="mb-2 block text-sm font-semibold"
-                      >
-                        Email Address *
-                      </label>
-                      <input
-                        id="career-email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        maxLength={150}
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="career-phone"
-                        className="mb-2 block text-sm font-semibold"
-                      >
-                        Phone / WhatsApp Number *
-                      </label>
-                      <input
-                        id="career-phone"
-                        name="phone"
-                        type="tel"
-                        autoComplete="tel"
-                        required
-                        maxLength={25}
-                        className={inputClass}
-                      />
-                    </div>
-                    {careerPath === "fresher" ? (
+                  <fieldset
+                    disabled={applicationSubmitting}
+                    className="space-y-5"
+                  >
+                    <div className="grid gap-5 sm:grid-cols-2">
                       <div>
                         <label
-                          htmlFor="career-education"
+                          htmlFor="career-name"
                           className="mb-2 block text-sm font-semibold"
                         >
-                          Education Qualification *
+                          Full Name *
                         </label>
                         <input
-                          id="career-education"
-                          name="education"
+                          id="career-name"
+                          name="fullName"
+                          autoComplete="name"
                           required
-                          maxLength={200}
+                          maxLength={100}
                           className={inputClass}
                         />
                       </div>
-                    ) : (
-                      <>
+
+                      <div>
+                        <label
+                          htmlFor="career-email"
+                          className="mb-2 block text-sm font-semibold"
+                        >
+                          Email Address *
+                        </label>
+                        <input
+                          id="career-email"
+                          name="email"
+                          type="email"
+                          autoComplete="email"
+                          required
+                          maxLength={150}
+                          className={inputClass}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="career-phone"
+                          className="mb-2 block text-sm font-semibold"
+                        >
+                          Phone / WhatsApp Number *
+                        </label>
+                        <input
+                          id="career-phone"
+                          name="phone"
+                          type="tel"
+                          autoComplete="tel"
+                          required
+                          maxLength={25}
+                          className={inputClass}
+                        />
+                      </div>
+
+                      {careerPath === "fresher" ? (
                         <div>
                           <label
-                            htmlFor="career-position"
+                            htmlFor="career-education"
                             className="mb-2 block text-sm font-semibold"
                           >
-                            Applying For *
-                          </label>
-                          <select
-                            id="career-position"
-                            name="position"
-                            className={inputClass}
-                          >
-                            <option>Field Technician / Installer</option>
-                            <option>ELV Systems Engineer</option>
-                            <option>Smart Automation Specialist</option>
-                            <option>Project Manager</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="career-years"
-                            className="mb-2 block text-sm font-semibold"
-                          >
-                            Years of Experience *
+                            Education Qualification *
                           </label>
                           <input
-                            id="career-years"
-                            name="yearsOfExp"
-                            type="number"
-                            min="0"
-                            max="60"
-                            step="0.5"
+                            id="career-education"
+                            name="education"
                             required
+                            maxLength={200}
                             className={inputClass}
                           />
                         </div>
-                      </>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="career-details"
-                      className="mb-2 block text-sm font-semibold"
-                    >
-                      {careerPath === "fresher"
-                        ? "Personality & Career Goals *"
-                        : "Technical Strengths & Past Projects *"}
-                    </label>
-                    <textarea
-                      id="career-details"
-                      name={
-                        careerPath === "fresher"
-                          ? "personalityGoal"
-                          : "technicalStrengths"
-                      }
-                      rows={5}
-                      required
-                      maxLength={2000}
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="career-documents" className="mb-2 block text-sm font-semibold">CV / Relevant Documents</label>
-                    <input id="career-documents" name="documents" type="file" multiple accept=".pdf,.docx,.jpg,.jpeg,.png" aria-describedby="career-documents-help" className={inputClass} />
-                    <p id="career-documents-help" className="mt-2 text-xs text-slate-500">Optional: PDF, DOCX, JPG or PNG. Up to 3 files, 3 MB combined.</p>
-                  </div>
-                  <div className="hidden" aria-hidden="true">
-                    <label htmlFor="career-company">Company</label>
-                    <input id="career-company" name="company" tabIndex={-1} autoComplete="off" />
-                  </div>
+                      ) : (
+                        <>
+                          <div>
+                            <label
+                              htmlFor="career-position"
+                              className="mb-2 block text-sm font-semibold"
+                            >
+                              Applying For *
+                            </label>
+                            <select
+                              id="career-position"
+                              name="position"
+                              className={inputClass}
+                            >
+                              <option>Field Technician / Installer</option>
+                              <option>ELV Systems Engineer</option>
+                              <option>Smart Automation Specialist</option>
+                              <option>Project Manager</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label
+                              htmlFor="career-years"
+                              className="mb-2 block text-sm font-semibold"
+                            >
+                              Years of Experience *
+                            </label>
+                            <input
+                              id="career-years"
+                              name="yearsOfExp"
+                              type="number"
+                              min="0"
+                              max="60"
+                              step="0.5"
+                              required
+                              className={inputClass}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="career-details"
+                        className="mb-2 block text-sm font-semibold"
+                      >
+                        {careerPath === "fresher"
+                          ? "Personality & Career Goals *"
+                          : "Technical Strengths & Past Projects *"}
+                      </label>
+                      <textarea
+                        id="career-details"
+                        name={
+                          careerPath === "fresher"
+                            ? "personalityGoal"
+                            : "technicalStrengths"
+                        }
+                        rows={5}
+                        required
+                        maxLength={2000}
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="career-documents"
+                        className="mb-2 block text-sm font-semibold"
+                      >
+                        CV / Relevant Documents
+                      </label>
+                      <input
+                        id="career-documents"
+                        name="documents"
+                        type="file"
+                        multiple
+                        accept=".pdf,.docx,.jpg,.jpeg,.png"
+                        aria-describedby="career-documents-help"
+                        className={inputClass}
+                      />
+                      <p
+                        id="career-documents-help"
+                        className="mt-2 text-xs text-slate-500"
+                      >
+                        Optional: PDF, DOCX, JPG or PNG. Up to 3 files,
+                        3 MB combined.
+                      </p>
+                    </div>
+
+                    <div className="hidden" aria-hidden="true">
+                      <label htmlFor="career-company">Company</label>
+                      <input
+                        id="career-company"
+                        name="company"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
                   </fieldset>
-                  <button type="submit" disabled={applicationSubmitting} className={`${primaryButton} disabled:cursor-wait disabled:opacity-60`}>
+
+                  <button
+                    type="submit"
+                    disabled={applicationSubmitting}
+                    className={`${primaryButton} disabled:cursor-wait disabled:opacity-60`}
+                  >
                     <Send size={18} aria-hidden="true" />
                     {applicationSubmitting ? "Submitting..." : "Submit"}
                   </button>
                 </form>
+
                 {applicationStatus && (
-                  <div role={applicationStatus.type === "error" ? "alert" : "status"} className={`mt-5 rounded-xl p-4 text-sm ${applicationStatus.type === "success" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+                  <div
+                    role={
+                      applicationStatus.type === "error" ? "alert" : "status"
+                    }
+                    className={`mt-5 rounded-xl p-4 text-sm ${
+                      applicationStatus.type === "success"
+                        ? "bg-green-50 text-green-800"
+                        : "bg-red-50 text-red-800"
+                    }`}
+                  >
                     {applicationStatus.message}
                   </div>
                 )}
@@ -866,6 +1012,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+
       {/* FOOTER */}
       <footer
         id="contact"
@@ -885,15 +1032,18 @@ export default function Home() {
               Building Trust, Delivering Excellence.
             </p>
           </div>
+
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Contact Tygrom
             </h3>
+
             <div className="space-y-4 text-sm">
               <p className="flex items-center gap-3">
                 <MapPin size={18} aria-hidden="true" />
                 Randathani, Malappuram, Kerala
               </p>
+
               <a
                 href={`tel:${CONTACT.phone}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -901,6 +1051,7 @@ export default function Home() {
                 <Phone size={18} aria-hidden="true" />
                 {CONTACT.display}
               </a>
+
               <a
                 href={`mailto:${CONTACT.email}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -908,6 +1059,7 @@ export default function Home() {
                 <Mail size={18} aria-hidden="true" />
                 {CONTACT.email}
               </a>
+
               <a
                 href={whatsappLink()}
                 target="_blank"
@@ -919,10 +1071,12 @@ export default function Home() {
               </a>
             </div>
           </div>
+
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Working Hours
             </h3>
+
             <p className="flex items-start gap-3 text-sm leading-relaxed">
               <Clock
                 size={18}
@@ -933,6 +1087,7 @@ export default function Home() {
               <br />
               8:00 AM–6:00 PM
             </p>
+
             <button
               type="button"
               onClick={openBooking}
@@ -942,11 +1097,13 @@ export default function Home() {
             </button>
           </div>
         </div>
+
         <p className="mx-auto mt-10 max-w-7xl border-t border-slate-700 pt-6 text-center text-xs">
           © {new Date().getFullYear()} Tygrom Integrated Solutions.
           All rights reserved.
         </p>
       </footer>
+
       {/* SITE VISIT DIALOG */}
       <dialog
         ref={bookingDialog}
@@ -961,6 +1118,7 @@ export default function Home() {
           >
             Request a Site Visit
           </h2>
+
           <button
             type="button"
             onClick={() => bookingDialog.current?.close()}
@@ -970,6 +1128,7 @@ export default function Home() {
             <X aria-hidden="true" />
           </button>
         </div>
+
         <p
           id="booking-description"
           className="mb-6 text-sm leading-relaxed text-slate-600"
@@ -977,10 +1136,8 @@ export default function Home() {
           Share your requirements and preferred schedule.
           Our team will confirm availability and booking details.
         </p>
-        <form
-          onSubmit={handleSiteVisitSubmit}
-          className="space-y-5"
-        >
+
+        <form onSubmit={handleSiteVisitSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="visit-name"
@@ -997,6 +1154,7 @@ export default function Home() {
               className={inputClass}
             />
           </div>
+
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1015,6 +1173,7 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
+
             <div>
               <label
                 htmlFor="visit-location"
@@ -1032,6 +1191,7 @@ export default function Home() {
               />
             </div>
           </div>
+
           <div>
             <label
               htmlFor="visit-purpose"
@@ -1045,13 +1205,12 @@ export default function Home() {
               className={inputClass}
             >
               {services.map((service) => (
-                <option key={service.title}>
-                  {service.title}
-                </option>
+                <option key={service.title}>{service.title}</option>
               ))}
-              <option>Complete ELV & Smart Package</option>
+              <option>Complete ELV &amp; Smart Package</option>
             </select>
           </div>
+
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1068,6 +1227,7 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
+
             <div>
               <label
                 htmlFor="visit-time"
@@ -1085,11 +1245,13 @@ export default function Home() {
               />
             </div>
           </div>
+
           <p className="text-sm leading-relaxed text-slate-600">
             Continuing opens WhatsApp with your details. Press Send
             in WhatsApp to submit your request. Your preferred
             schedule is subject to confirmation.
           </p>
+
           <button
             type="submit"
             className={`${primaryButton} w-full`}
