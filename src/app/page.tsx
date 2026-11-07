@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import SiteHeader from "@/components/site-header";
 import { useRef, useState } from "react";
@@ -18,14 +17,12 @@ import {
   ArrowLeft,
   Send,
 } from "lucide-react";
-
 const CONTACT = {
   display: "+91 9946949924",
   phone: "+919946949924",
   whatsapp: "919946949924",
   email: "info@tygrom.in",
 };
-
 const services = [
   {
     gridLabel: "Home Automation",
@@ -112,26 +109,20 @@ const services = [
     href: "/pabx",
   },
 ];
-
 const inputClass =
   "w-full min-w-0 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-900 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700/20";
-
 const primaryButton =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700";
-
 function whatsappLink(message?: string) {
   const base = `https://wa.me/${CONTACT.whatsapp}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
-
 function localDate() {
   const date = new Date();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-
   return `${date.getFullYear()}-${month}-${day}`;
 }
-
 const BRAND_LOGOS = [
   { name: "KNX", src: "/brands/knx.png", width: 46, height: 22 },
   { name: "Control4", src: "/brands/control4.png", width: 80, height: 18 },
@@ -169,7 +160,6 @@ const BRAND_LOGOS = [
   { name: "SketchUp", src: "/brands/sketchup.png", width: 80, height: 18 },
   { name: "Revit", src: "/brands/revit.png", width: 80, height: 20 },
 ];
-
 function BrandLogo({
   name,
   src,
@@ -183,7 +173,6 @@ function BrandLogo({
 }) {
   const [failed, setFailed] = useState(false);
   const dark = ["Comelit", "Fermax", "Denon", "ZKTeco"].includes(name);
-
   return (
     <div
       className={`flex h-7 shrink-0 items-center justify-center ${
@@ -212,10 +201,8 @@ function BrandLogo({
     </div>
   );
 }
-
 function BrandStrip() {
   const [paused, setPaused] = useState(false);
-
   return (
     <section
       aria-label="Brands and technologies we work with"
@@ -229,7 +216,6 @@ function BrandStrip() {
       >
         {paused ? "Play logo animation" : "Pause logo animation"}
       </button>
-
       <div
         className="tygrom-brand-window overflow-hidden"
         tabIndex={0}
@@ -252,14 +238,12 @@ function BrandStrip() {
           ))}
         </div>
       </div>
-
       <style>{`
         .tygrom-brand-track {
           display: flex;
           width: max-content;
           animation: tygromBrandScroll 100s linear infinite;
         }
-
         .tygrom-brand-group {
           display: flex;
           flex-shrink: 0;
@@ -267,26 +251,21 @@ function BrandStrip() {
           gap: 32px;
           padding-right: 32px;
         }
-
         .tygrom-brand-window:hover .tygrom-brand-track,
         .tygrom-brand-window:focus-within .tygrom-brand-track {
           animation-play-state: paused !important;
         }
-
         @keyframes tygromBrandScroll {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
         }
-
         @media (prefers-reduced-motion: reduce) {
           .tygrom-brand-track {
             animation: none;
           }
-
           .tygrom-brand-window {
             overflow-x: auto;
           }
-
           .tygrom-brand-group[aria-hidden="true"] {
             display: none;
           }
@@ -300,51 +279,50 @@ function FounderNote() {
   return (
     <section
       aria-labelledby="founder-note-heading"
-      className="mt-6 border-t border-slate-200 pt-6"
+      className="border-t border-slate-200 pt-6 lg:col-span-2"
     >
-      <div className="flex items-center gap-3 sm:gap-4">
-        <Image
-          src="/selman-variyath.jpeg"
-          alt="Selman Variyath"
-          width={64}
-          height={64}
-          sizes="64px"
-          className="h-16 w-16 shrink-0 rounded-full object-cover object-[center_28%]"
-        />
-
-        <div className="min-w-0">
-          <h3
-            id="founder-note-heading"
-            className="text-base font-semibold leading-snug text-[#0A192F] sm:text-lg"
-          >
-            Experience Behind Every Solution
-          </h3>
-
-          <p className="mt-1 text-sm font-medium text-slate-700">
-            Selman Variyath
-          </p>
-
-          <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-            Founder of Tygrom Integrated Solutions &amp;
-            <br />
-            Tygrohm Technical Services L.L.C
+      <div className="rounded-2xl bg-[#F0F7FC] p-5 sm:p-6 lg:grid lg:grid-cols-2 lg:items-start lg:gap-8 lg:p-8">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Image
+            src="/selman-variyath.jpeg"
+            alt="Selman Variyath"
+            width={64}
+            height={64}
+            sizes="64px"
+            className="h-16 w-16 shrink-0 rounded-full object-cover object-[center_28%]"
+          />
+          <div className="min-w-0">
+            <h3
+              id="founder-note-heading"
+              className="text-base font-semibold leading-snug text-[#0A192F] sm:text-lg"
+            >
+              Experience Behind Every Solution
+            </h3>
+            <p className="mt-1 text-sm font-medium text-slate-700">
+              Selman Variyath
+            </p>
+            <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+              Founder of Tygrom Integrated Solutions &amp;
+              <br />
+              Tygrohm Technical Services L.L.C
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 lg:mt-0">
+          <blockquote className="text-sm font-semibold leading-relaxed text-[#0A192F]">
+            “The real value of technology is in how well it works together—and
+            how well it serves you.”
+          </blockquote>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">
+            My experience across electrical, automation, complete ELV systems
+            and system integration has taught me that reliability begins with
+            careful planning. At Tygrom, we consider your space as a whole,
+            explain the choices honestly and bring compatible technologies
+            together with a clear purpose. Your trust is earned through our
+            advice, our work and our support.
           </p>
         </div>
       </div>
-
-      <blockquote className="mt-4 text-sm font-semibold leading-relaxed text-[#0A192F]">
-        “The real value of technology is in how well it works together—and
-        how well it serves you.”
-      </blockquote>
-
-      <p className="mt-3 text-sm leading-relaxed text-slate-600">
-        My experience across electrical, automation, complete ELV systems
-        and system integration has taught me that reliability begins with
-        careful planning. At Tygrom, we consider your space as a whole,
-        explain the choices honestly and bring compatible technologies
-        together with a clear purpose. Your trust is earned through our
-        advice, our work and our support.
-      </p>
     </section>
   );
 }
@@ -353,27 +331,21 @@ export default function Home() {
   const [careerPath, setCareerPath] = useState<
     "fresher" | "experienced" | null
   >(null);
-
   const [applicationStatus, setApplicationStatus] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
-
   const [applicationSubmitting, setApplicationSubmitting] = useState(false);
   const applicationLock = useRef(false);
   const submissionId = useRef<string | null>(null);
   const bookingDialog = useRef<HTMLDialogElement>(null);
-
   function openBooking() {
     bookingDialog.current?.showModal();
   }
-
   function handleSiteVisitSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
     const value = (name: string) => String(data.get(name) ?? "").trim();
-
     const message = [
       "*New Site Visit Request — Tygrom*",
       "",
@@ -386,23 +358,17 @@ export default function Home() {
       "",
       "Please confirm availability and booking details.",
     ].join("\n");
-
     window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
   }
-
   async function handleCareerSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     if (applicationLock.current || !careerPath) return;
-
     const form = event.currentTarget;
     const data = new FormData(form);
     const files = data
       .getAll("documents")
       .filter((item): item is File => item instanceof File && item.size > 0);
-
     setApplicationStatus(null);
-
     if (
       files.length > 3 ||
       files.reduce((sum, file) => sum + file.size, 0) > 3 * 1024 * 1024
@@ -413,7 +379,6 @@ export default function Home() {
       });
       return;
     }
-
     if (files.some((file) => !/\.(pdf|docx|jpe?g|png)$/i.test(file.name))) {
       setApplicationStatus({
         type: "error",
@@ -421,35 +386,28 @@ export default function Home() {
       });
       return;
     }
-
     applicationLock.current = true;
     setApplicationSubmitting(true);
     submissionId.current ??= crypto.randomUUID();
-
     data.set("submissionId", submissionId.current);
     data.set("careerPath", careerPath);
-
     try {
       const response = await fetch("/api/careers", {
         method: "POST",
         body: data,
       });
-
       const result = await response.json().catch(() => null);
-
       if (!response.ok) {
         throw new Error(
           result?.error ||
             "Unable to submit. Please try again or email info@tygrom.in."
         );
       }
-
       setApplicationStatus({
         type: "success",
         message:
           "Your application has been submitted. Thank you for your interest in Tygrom.",
       });
-
       form.reset();
       submissionId.current = null;
     } catch (error) {
@@ -465,14 +423,11 @@ export default function Home() {
       setApplicationSubmitting(false);
     }
   }
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-700 selection:text-white">
       <SiteHeader isHome onBookVisit={openBooking} />
-
       <main>
         <BrandStrip />
-
         {/* HERO */}
         <section
           id="home"
@@ -490,33 +445,27 @@ export default function Home() {
               className="absolute inset-0 -z-20 h-full w-full object-cover"
             />
           </picture>
-
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/50" />
-
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
               <p className="mb-3 text-xs font-semibold tracking-wide text-cyan-200 sm:mb-5 sm:text-sm">
                 Home &amp; Office Automation · Security · Connectivity
               </p>
-
               <h1 className="mb-4 text-[clamp(1.5rem,6.4vw,1.5625rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-6 sm:text-[34px] lg:text-[42px]">
                 Smart Home &amp; Office Automation,
                 <br />
                 CCTV &amp; Security Systems in Malappuram, Kerala
               </h1>
-
               <p className="mb-3 max-w-2xl text-sm leading-relaxed text-slate-100 sm:mb-5 sm:text-lg">
                 Tygrom Integrated Solutions is a technology and engineering
                 company based in Randathani, Malappuram. We design, install and
                 support automation, CCTV, access control, networking, gate and
                 smart pool systems for homes and businesses across Kerala.
               </p>
-
               <p className="mb-5 flex items-center gap-2 text-xs text-slate-200 sm:mb-8 sm:text-sm">
                 <MapPin size={16} aria-hidden="true" />
                 Based in Randathani, Malappuram · Serving Kerala
               </p>
-
               <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 <button
                   type="button"
@@ -526,7 +475,6 @@ export default function Home() {
                   Discuss Your Project
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
-
                 <a
                   href={whatsappLink(
                     "Hello Tygrom, I would like to discuss a project."
@@ -538,7 +486,6 @@ export default function Home() {
                   <MessageCircle size={18} aria-hidden="true" />
                   WhatsApp Us
                 </a>
-
                 <a
                   href="#services"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/50 px-2 py-3 text-xs font-semibold text-white hover:bg-white/10 sm:px-5 sm:text-sm"
@@ -546,14 +493,12 @@ export default function Home() {
                   Explore Services
                 </a>
               </div>
-
               <p className="mt-5 text-xs text-slate-300 sm:mt-8 sm:text-sm">
                 Building Trust, Delivering Excellence.
               </p>
             </div>
           </div>
         </section>
-
         {/* ABOUT */}
         <section
           id="about"
@@ -564,11 +509,9 @@ export default function Home() {
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-sky-700">
                 About Tygrom
               </p>
-
               <h2 className="mb-3 text-xl font-bold leading-tight text-[#0A192F] sm:text-3xl">
                 Electrical engineering expertise, planned around your space.
               </h2>
-
               <p className="mb-5 text-sm leading-relaxed text-slate-600 sm:text-base">
                 Tygrom is led by Selman Variyath, an electrical engineering
                 professional with hands-on experience in ELV, networking and
@@ -577,7 +520,6 @@ export default function Home() {
                 recommendations based on the property, existing systems and
                 project requirements.
               </p>
-
               <ul className="space-y-4">
                 {[
                   "Solutions planned for your space and requirements",
@@ -598,19 +540,16 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-
             <div className="min-w-0">
               <div className="rounded-2xl bg-[#0A192F] p-5 text-white sm:p-7 lg:p-9">
                 <h3 className="mb-4 text-2xl font-bold">
                   One coordinated solution.
                 </h3>
-
                 <p className="mb-5 text-sm leading-relaxed text-slate-300 sm:text-base">
                   From a single system upgrade to an integrated project,
                   we help you select compatible technology and plan
                   installation around your property.
                 </p>
-
                 <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
                   <div>
                     <p className="font-semibold text-cyan-200">Homes</p>
@@ -618,7 +557,6 @@ export default function Home() {
                       Comfort and security
                     </p>
                   </div>
-
                   <div>
                     <p className="font-semibold text-cyan-200">
                       Businesses
@@ -629,12 +567,11 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-
-              <FounderNote />
             </div>
+
+            <FounderNote />
           </div>
         </section>
-
         {/* SERVICES */}
         <section
           id="services"
@@ -645,17 +582,14 @@ export default function Home() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Our Services
               </p>
-
               <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-4xl">
                 Smart Solution for Your Space.
               </h2>
-
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Tell us what you need. We will help you plan a suitable
                 system and explain the available options.
               </p>
             </div>
-
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-4">
               {services.map((service, index) => (
                 <a
@@ -676,7 +610,6 @@ export default function Home() {
                       }%`,
                     }}
                   />
-
                   <span className="flex min-h-11 items-center justify-center px-1 py-1 text-[8px] font-bold leading-tight text-[#0A192F] min-[380px]:text-[9px] sm:min-h-12 sm:text-sm">
                     {service.gridLabel}
                   </span>
@@ -685,7 +618,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* PROJECT CONTACT */}
         <section className="bg-[#0A192F] py-12 text-white">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center">
@@ -693,13 +625,11 @@ export default function Home() {
               <h2 className="mb-3 text-2xl font-bold sm:text-3xl">
                 Planning a new project or upgrading an existing system?
               </h2>
-
               <p className="max-w-2xl leading-relaxed text-slate-300">
                 Share your location and requirements so we can discuss
                 the next steps with you.
               </p>
             </div>
-
             <button
               type="button"
               onClick={openBooking}
@@ -709,7 +639,6 @@ export default function Home() {
             </button>
           </div>
         </section>
-
         {/* CAREERS */}
         <section
           id="careers"
@@ -720,17 +649,14 @@ export default function Home() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700 sm:mb-3 sm:text-sm sm:tracking-widest">
                 Join Our Team
               </p>
-
               <h2 className="mb-3 text-2xl font-bold leading-tight text-[#0A192F] sm:mb-4 sm:text-3xl">
                 Build Your Career With Tygrom
               </h2>
-
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
                 Share your background, technical interests and
                 experience with our team.
               </p>
             </div>
-
             {!careerPath ? (
               <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-6">
                 {(["fresher", "experienced"] as const).map((path) => (
@@ -757,17 +683,14 @@ export default function Home() {
                         aria-hidden="true"
                       />
                     )}
-
                     <h3 className="mb-3 text-base font-bold sm:text-xl">
                       {path === "fresher" ? "Fresher" : "Experienced"}
                     </h3>
-
                     <p className="mb-4 flex-1 text-xs leading-relaxed text-slate-600 sm:mb-5 sm:text-base">
                       {path === "fresher"
                         ? "Tell us about your education, interests and career goals."
                         : "Tell us about your technical skills and previous projects."}
                     </p>
-
                     <span className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-lg bg-sky-700 px-1 py-2 text-[10px] font-semibold text-white sm:text-sm">
                       Apply Now
                       <ChevronRight size={18} aria-hidden="true" />
@@ -790,13 +713,11 @@ export default function Home() {
                   <ArrowLeft size={18} aria-hidden="true" />
                   Back to selection
                 </button>
-
                 <h3 className="mb-6 text-2xl font-bold">
                   {careerPath === "fresher"
                     ? "Fresher Application"
                     : "Experienced Application"}
                 </h3>
-
                 <form
                   key={careerPath}
                   onSubmit={handleCareerSubmit}
@@ -828,7 +749,6 @@ export default function Home() {
                           className={inputClass}
                         />
                       </div>
-
                       <div>
                         <label
                           htmlFor="career-email"
@@ -846,7 +766,6 @@ export default function Home() {
                           className={inputClass}
                         />
                       </div>
-
                       <div>
                         <label
                           htmlFor="career-phone"
@@ -864,7 +783,6 @@ export default function Home() {
                           className={inputClass}
                         />
                       </div>
-
                       {careerPath === "fresher" ? (
                         <div>
                           <label
@@ -901,7 +819,6 @@ export default function Home() {
                               <option>Project Manager</option>
                             </select>
                           </div>
-
                           <div>
                             <label
                               htmlFor="career-years"
@@ -923,7 +840,6 @@ export default function Home() {
                         </>
                       )}
                     </div>
-
                     <div>
                       <label
                         htmlFor="career-details"
@@ -946,7 +862,6 @@ export default function Home() {
                         className={inputClass}
                       />
                     </div>
-
                     <div>
                       <label
                         htmlFor="career-documents"
@@ -971,7 +886,6 @@ export default function Home() {
                         3 MB combined.
                       </p>
                     </div>
-
                     <div className="hidden" aria-hidden="true">
                       <label htmlFor="career-company">Company</label>
                       <input
@@ -982,7 +896,6 @@ export default function Home() {
                       />
                     </div>
                   </fieldset>
-
                   <button
                     type="submit"
                     disabled={applicationSubmitting}
@@ -992,7 +905,6 @@ export default function Home() {
                     {applicationSubmitting ? "Submitting..." : "Submit"}
                   </button>
                 </form>
-
                 {applicationStatus && (
                   <div
                     role={
@@ -1012,7 +924,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
       {/* FOOTER */}
       <footer
         id="contact"
@@ -1032,18 +943,15 @@ export default function Home() {
               Building Trust, Delivering Excellence.
             </p>
           </div>
-
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Contact Tygrom
             </h3>
-
             <div className="space-y-4 text-sm">
               <p className="flex items-center gap-3">
                 <MapPin size={18} aria-hidden="true" />
                 Randathani, Malappuram, Kerala
               </p>
-
               <a
                 href={`tel:${CONTACT.phone}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -1051,7 +959,6 @@ export default function Home() {
                 <Phone size={18} aria-hidden="true" />
                 {CONTACT.display}
               </a>
-
               <a
                 href={`mailto:${CONTACT.email}`}
                 className="flex items-center gap-3 hover:text-white hover:underline"
@@ -1059,7 +966,6 @@ export default function Home() {
                 <Mail size={18} aria-hidden="true" />
                 {CONTACT.email}
               </a>
-
               <a
                 href={whatsappLink()}
                 target="_blank"
@@ -1071,12 +977,10 @@ export default function Home() {
               </a>
             </div>
           </div>
-
           <div>
             <h3 className="mb-4 font-semibold text-white">
               Working Hours
             </h3>
-
             <p className="flex items-start gap-3 text-sm leading-relaxed">
               <Clock
                 size={18}
@@ -1087,7 +991,6 @@ export default function Home() {
               <br />
               8:00 AM–6:00 PM
             </p>
-
             <button
               type="button"
               onClick={openBooking}
@@ -1097,13 +1000,11 @@ export default function Home() {
             </button>
           </div>
         </div>
-
         <p className="mx-auto mt-10 max-w-7xl border-t border-slate-700 pt-6 text-center text-xs">
           © {new Date().getFullYear()} Tygrom Integrated Solutions.
           All rights reserved.
         </p>
       </footer>
-
       {/* SITE VISIT DIALOG */}
       <dialog
         ref={bookingDialog}
@@ -1118,7 +1019,6 @@ export default function Home() {
           >
             Request a Site Visit
           </h2>
-
           <button
             type="button"
             onClick={() => bookingDialog.current?.close()}
@@ -1128,7 +1028,6 @@ export default function Home() {
             <X aria-hidden="true" />
           </button>
         </div>
-
         <p
           id="booking-description"
           className="mb-6 text-sm leading-relaxed text-slate-600"
@@ -1136,7 +1035,6 @@ export default function Home() {
           Share your requirements and preferred schedule.
           Our team will confirm availability and booking details.
         </p>
-
         <form onSubmit={handleSiteVisitSubmit} className="space-y-5">
           <div>
             <label
@@ -1154,7 +1052,6 @@ export default function Home() {
               className={inputClass}
             />
           </div>
-
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1173,7 +1070,6 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
-
             <div>
               <label
                 htmlFor="visit-location"
@@ -1191,7 +1087,6 @@ export default function Home() {
               />
             </div>
           </div>
-
           <div>
             <label
               htmlFor="visit-purpose"
@@ -1210,7 +1105,6 @@ export default function Home() {
               <option>Complete ELV &amp; Smart Package</option>
             </select>
           </div>
-
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <label
@@ -1227,7 +1121,6 @@ export default function Home() {
                 className={inputClass}
               />
             </div>
-
             <div>
               <label
                 htmlFor="visit-time"
@@ -1245,13 +1138,11 @@ export default function Home() {
               />
             </div>
           </div>
-
           <p className="text-sm leading-relaxed text-slate-600">
             Continuing opens WhatsApp with your details. Press Send
             in WhatsApp to submit your request. Your preferred
             schedule is subject to confirmation.
           </p>
-
           <button
             type="submit"
             className={`${primaryButton} w-full`}
